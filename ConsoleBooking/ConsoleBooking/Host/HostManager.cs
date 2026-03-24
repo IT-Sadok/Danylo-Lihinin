@@ -1,6 +1,6 @@
 using ConsoleBooking.Interface;
 
-namespace ConsoleBooking.Classes;
+namespace ConsoleBooking.Host;
 
 public class HostManager : IManager
 {

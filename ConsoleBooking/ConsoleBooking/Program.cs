@@ -1,4 +1,6 @@
-﻿using ConsoleBooking.Classes;
+﻿using ConsoleBooking.Host;
+using ConsoleBooking.Apartment;
+
 
 Host host1 = new Host
 {
@@ -38,6 +40,7 @@ HostManager hostManager = new HostManager
         host1,
         host2
     }
+    
 };
 
 

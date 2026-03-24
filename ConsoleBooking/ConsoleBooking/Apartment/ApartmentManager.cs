@@ -1,8 +1,8 @@
 using ConsoleBooking.Interface;
 
-namespace ConsoleBooking.Classes;
+namespace ConsoleBooking.Apartment;
 
-public class ApartmentManager : IManager
+public class ApartmentManager : IManager // Apartment manager create, delete apartments
 {
     public List<Apartment> Apartments = new List<Apartment>();
 
