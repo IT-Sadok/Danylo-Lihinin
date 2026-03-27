@@ -9,9 +9,5 @@ public class ApartmentService // service have business logic for apartments
     {
         HostManager = manager;
     }
-
-    public void Method()
-    {
-
-    }
+    
 }

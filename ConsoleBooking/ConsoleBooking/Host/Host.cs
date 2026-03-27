@@ -3,24 +3,22 @@ namespace ConsoleBooking.Host;
 
 public class Host
 {
+    public int ID { get; set; }
     public string Name { get; set; }
     public int Number { get; set; }
     public ApartmentManager Apartments { get; set; } = new ApartmentManager();
 
-    public Host(int id, string name, int number)
+    public Host(string name, int number)
     {
         Name = name;
         Number = number;
     }
 
-    public Host()
-    {
-        
-    }
+    public Host() { }
 
-    public void Info(int id)
+    public void Info()
     {
-        Console.WriteLine($"ID: {id}, Name: {Name}, Number: {Number}");
+        Console.WriteLine($"ID: {ID}, Name: {Name}, Number: {Number}");
         
     }
 
