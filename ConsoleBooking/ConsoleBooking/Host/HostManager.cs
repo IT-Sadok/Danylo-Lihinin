@@ -1,30 +1,42 @@
-using ConsoleBooking.Apartment;
-using ConsoleBooking.Interface;
+using ConsoleBooking.Apartments;
+
 
 namespace ConsoleBooking.Host;
 
-public class HostManager : IManager
+public class HostManager  
 {
-    public Dictionary<int,Host> Hosts = new Dictionary<int, Host>();
+    private Dictionary<int,Host> _hosts = new Dictionary<int, Host>();
     private int _nextId = 1;
 
-    public void AddHost(string name, int number, ApartmentManager apartmentManager)
+    public void AddHost(string name, int number,List<Apartment> apartments)
     {
         var host = new Host
         {
-            ID = _nextId,
+            Id = _nextId,
             Name = name,
             Number = number,
-            Apartments = apartmentManager
+            Apartments = apartments
         };
-        Hosts[host.ID] = host;
+        _hosts[host.Id] = host;
         _nextId++;
     }
-    public void ShowAll()
+    public void AddHost(string name, int number)
     {
-        foreach (var host in Hosts)
-        {
-            host.Value.Info();
-        }
+        AddHost(name, number, new List<Apartment>());
+    }
+
+    public bool HostExists(int id)
+    {
+       return _hosts.ContainsKey(id);
+    }
+
+    public Host? GetHostById(int id)
+    {
+        return HostExists(id) ?  _hosts[id] : null;
+    }
+
+    public string ShowAll()
+    {
+            return String.Join("\n",_hosts.Values);
     }
 }

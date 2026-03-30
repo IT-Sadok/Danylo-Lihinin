@@ -1,12 +1,14 @@
 using System.Diagnostics;
-using ConsoleBooking.Apartment;
+using ConsoleBooking.Apartments;
+using ConsoleBooking.Host;
 
 namespace ConsoleBooking.UI;
 
 public class ConsoleUI
 {
-    private  bool _isRunning = true;
-    public ApartmentService Service { get; }
+    private bool _isRunning = true;
+    private HostManager _service { get; }
+
     public void Run()
     {
         while (_isRunning)
@@ -20,30 +22,27 @@ public class ConsoleUI
                 switch (result)
                 {
                     case 1:
-                        Service.HostManager.ShowAll();
+                        Console.WriteLine(_service.ShowAll());
                         break;
                     case 2:
                         Console.WriteLine("Write hosts ID: ");
-                        int inputId = int.Parse(Console.ReadLine());
-                        if (Service.HostManager.Hosts.ContainsKey(inputId))
+                        if (int.TryParse(Console.ReadLine(), out int inputId))
                         {
-                            Service.HostManager.Hosts[inputId].ApartmentInfo();
+                            var apartmentInfo = _service.GetHostById(inputId)?.ApartmentInfo() ?? "Host is not found";
+                            Console.WriteLine(apartmentInfo);
+                        }
 
-                        }
-                        else
-                        {
-                            Console.WriteLine("No hosts found");
-                        }
                         break;
                     case 3:
-                        _isRunning =false;
+                        _isRunning = false;
                         break;
                 }
             }
         }
     }
-    public ConsoleUI(ApartmentService service)
-        {
-        Service = service;
-        }
+
+    public ConsoleUI(HostManager service)
+    {
+        _service = service;
+    }
 }

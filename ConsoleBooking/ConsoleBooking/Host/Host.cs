@@ -1,32 +1,20 @@
-using ConsoleBooking.Apartment;
+using ConsoleBooking.Apartments; 
 namespace ConsoleBooking.Host;
 
 public class Host
 {
-    public int ID { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; }
     public int Number { get; set; }
-    public ApartmentManager Apartments { get; set; } = new ApartmentManager();
-
-    public Host(string name, int number)
+    public List<Apartment> Apartments { get; set; }
+    
+    public override string ToString()
     {
-        Name = name;
-        Number = number;
+        return $"ID: {Id}, Name: {Name}, Number: {Number}";
     }
 
-    public Host() { }
-
-    public void Info()
+    public string ApartmentInfo()
     {
-        Console.WriteLine($"ID: {ID}, Name: {Name}, Number: {Number}");
-        
-    }
-
-    public void ApartmentInfo()
-    {
-        foreach (var apartment in Apartments.Apartments)
-        {
-            apartment.Info();
-        }
+        return String.Join("\n", Apartments);
     }
 }    
