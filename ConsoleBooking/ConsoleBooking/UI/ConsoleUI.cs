@@ -31,7 +31,6 @@ public class ConsoleUI
                             var apartmentInfo = _service.GetHostById(inputId)?.ApartmentInfo() ?? "Host is not found";
                             Console.WriteLine(apartmentInfo);
                         }
-
                         break;
                     case 3:
                         _isRunning = false;
