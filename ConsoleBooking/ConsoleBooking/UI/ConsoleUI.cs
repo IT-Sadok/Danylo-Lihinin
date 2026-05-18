@@ -8,34 +8,27 @@ public class ConsoleUI
 {
     private bool _isRunning = true;
     private HostManager _service { get; }
+    private ConsoleUIReader _reader = new ConsoleUIReader();
 
     public void Run()
     {
         while (_isRunning)
         {
-            Console.WriteLine("1 - Show all hosts");
-            Console.WriteLine("2 - Choose Host");
-            Console.WriteLine("3 - Exit");
-            var input = Console.ReadLine();
-            if (int.TryParse(input, out int result))
+            var input = _reader.ReadValue<int>("1 - Show all hosts\n2 - Choose Host\n3 - Exit", int.TryParse);
+
+            switch (input)
             {
-                switch (result)
-                {
-                    case 1:
-                        Console.WriteLine(_service.ShowAll());
-                        break;
-                    case 2:
-                        Console.WriteLine("Write hosts ID: ");
-                        if (int.TryParse(Console.ReadLine(), out int inputId))
-                        {
-                            var apartmentInfo = _service.GetHostById(inputId)?.ApartmentInfo() ?? "Host is not found";
-                            Console.WriteLine(apartmentInfo);
-                        }
-                        break;
-                    case 3:
-                        _isRunning = false;
-                        break;
-                }
+                case 1:
+                    Console.WriteLine(_service.ShowAll());
+                    break;
+                case 2:
+                    int inputId = _reader.ReadValue<int>("Write hosts ID: ", int.TryParse);
+                    var apartmentInfo = _service.GetHostById(inputId)?.ApartmentInfo() ?? "Host is not found";
+                    Console.WriteLine(apartmentInfo);
+                    break;
+                case 3:
+                    _isRunning = false;
+                    break;
             }
         }
     }
