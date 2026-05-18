@@ -8,23 +8,17 @@ public class HostManager
     private Dictionary<int,Host> _hosts = new Dictionary<int, Host>();
     private int _nextId = 1;
 
-    public void AddHost(string name, int number,List<Apartment> apartments)
+    public void AddHost(string name, int number)
     {
         var host = new Host
         {
             Id = _nextId,
             Name = name,
             Number = number,
-            Apartments = apartments
         };
         _hosts[host.Id] = host;
         _nextId++;
     }
-    public void AddHost(string name, int number)
-    {
-        AddHost(name, number, new List<Apartment>());
-    }
-
     public bool HostExists(int id)
     {
        return _hosts.ContainsKey(id);
@@ -36,7 +30,7 @@ public class HostManager
     }
 
     public string ShowAll()
-    {
-            return String.Join("\n",_hosts.Values);
+    { 
+        return String.Join("\n",_hosts.Values);
     }
 }

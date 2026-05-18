@@ -6,7 +6,7 @@ public class Host
     public int Id { get; set; }
     public string Name { get; set; }
     public int Number { get; set; }
-    public List<Apartment> Apartments { get; set; }
+    public List<Apartment> Apartments = new List<Apartment>();
     
     public override string ToString()
     {
