@@ -19,6 +19,19 @@ public class HostManager
         _hosts[host.Id] = host;
         _nextId++;
     }
+
+    public bool DeleteHost(int id)
+    {
+        if (HostExists(id))
+        {
+            _hosts.Remove(id);
+            return  true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     public bool HostExists(int id)
     {
        return _hosts.ContainsKey(id);
