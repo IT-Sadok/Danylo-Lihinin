@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using ConsoleBooking.Apartments;
 using ConsoleBooking.Host;
@@ -48,10 +49,7 @@ public class ConsoleUI
             switch (input)
             {
                 case 1:
-                    var name = _reader.ReadString("Write host name: ");
-                    var number = _reader.ReadValue<int>("Write host number: ", int.TryParse);
-                    _service.AddHost(name, number);
-                    Console.WriteLine("Host added!");
+                    AddHost();
                     break;
                 case 2:
                     HostUpdate();
@@ -63,6 +61,14 @@ public class ConsoleUI
                     return;
             }
         }
+    }
+
+    void AddHost()
+    {
+        var name = _reader.ReadString("Write host name: ");
+        var number = _reader.ReadValue<int>("Write host number: ", int.TryParse);
+        _service.AddHost(name, number);
+        Console.WriteLine("Host added!");
     }
 
     void HostUpdate()
@@ -124,47 +130,13 @@ public class ConsoleUI
             switch (input)
             {
                 case 1:
-                    var apartmentName = _reader.ReadString("Write apartment name: ");
-                    var apartmentPrice = _reader.ReadValue<decimal>("Write apartment price: ", decimal.TryParse);
-                    var apartmentRooms = _reader.ReadValue<short>("Write apartment rooms: ", short.TryParse);
-                    var apartmentIsAvailable = _reader.ReadBool("Write apartment is available:");
-                    host.AddApartment(apartmentName, apartmentPrice, apartmentRooms, apartmentIsAvailable);
-                    Console.WriteLine("Apartment added!");
+                    AddApartment(host);
                     break;
                 case 2:
-                    if (host.Apartments.Count > 0)
-                    {
-                        Console.WriteLine(host.ApartmentInfo());
-                        var apartmentID = _reader.ReadValue<int>("Write apartment ID: ", int.TryParse);
-                        if (apartmentID > 0 && apartmentID <= host.Apartments.Count)
-                        {
-                            var apartmentUpdate = host.Apartments[apartmentID - 1];
-                            ApartmentUpdate(apartmentUpdate);
-                        }
-                        else
-                            Console.WriteLine("ID is not  found!");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Host dont have apartments");
-                    }
-
+                    ApartmentUpdate(host);
                     break;
                 case 3:
-                    if (host.Apartments.Count > 0)
-                    {
-                        Console.WriteLine(host.ApartmentInfo());
-                        var apartmentDeleteID = _reader.ReadValue<int>("Write apartment ID: ", int.TryParse);
-                        var isDeleted = host.RemoveApartment(apartmentDeleteID - 1);
-                        if (isDeleted)
-                            Console.WriteLine("Apartment deleted!");
-                        else
-                            Console.WriteLine("Apartment not deleted!");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Host dont have apartments");
-                    }
+                    DeleteApartment(host);
                     break;
                 case 4:
                     Console.WriteLine("Operation complete");
@@ -176,42 +148,81 @@ public class ConsoleUI
         }
     }
 
-
-    void ApartmentUpdate(Apartment apartment)
+    void DeleteApartment(Host.Host host)
     {
-        while (true)
+        if (host.Apartments.Count > 0)
         {
-            var input = _reader.ReadValue<int>(
-                "What you want change? 1 - Name, 2 - Price, 3 - Rooms, 4 - Change availability, 5 - Exit ",
-                int.TryParse);
-            switch (input)
+            Console.WriteLine(host.ApartmentInfo());
+            var apartmentDeleteID = _reader.ReadValue<int>("Write apartment ID: ", int.TryParse);
+            var isDeleted = host.RemoveApartment(apartmentDeleteID - 1);
+            if (isDeleted)
+                Console.WriteLine("Apartment deleted!");
+            else
+                Console.WriteLine("Apartment not deleted!");
+        }
+        else
+        {
+            Console.WriteLine("Host dont have apartments");
+        }
+    }
+
+    void AddApartment(Host.Host host)
+    {
+        var apartmentName = _reader.ReadString("Write apartment name: ");
+        var apartmentPrice = _reader.ReadValue<decimal>("Write apartment price: ", decimal.TryParse);
+        var apartmentRooms = _reader.ReadValue<short>("Write apartment rooms: ", short.TryParse);
+        var apartmentIsAvailable = _reader.ReadBool("Write apartment is available:");
+        host.AddApartment(apartmentName, apartmentPrice, apartmentRooms, apartmentIsAvailable);
+        Console.WriteLine("Apartment added!");
+    }
+
+
+    void ApartmentUpdate(Host.Host host)
+    {
+        Console.WriteLine(host.ApartmentInfo());
+        var apartmentID = _reader.ReadValue<int>("Write apartment ID: ", int.TryParse);
+        if (apartmentID > 0 && apartmentID <= host.Apartments.Count)
+        {
+            var apartment = host.Apartments[apartmentID - 1];
+            while (true)
             {
-                case 1:
-                    var name = _reader.ReadString("Write new name: ");
-                    apartment.Name = name;
-                    Console.WriteLine("Apartment name changed!");
-                    break;
-                case 2:
-                    var price = _reader.ReadValue<decimal>("Write new price: ", decimal.TryParse);
-                    apartment.Price = price;
-                    Console.WriteLine("Apartment price changed!");
-                    break;
-                case 3:
-                    var rooms = _reader.ReadValue<short>("Write new rooms: ", short.TryParse);
-                    apartment.Rooms = rooms;
-                    Console.WriteLine("Apartment rooms changed!");
-                    break;
-                case 4:
-                    var isAvailable = _reader.ReadBool("Write apartment is available:");
-                    apartment.IsAvailable = isAvailable;
-                    Console.WriteLine("Apartment is available changed!");
-                    break;
-                case 5:
-                    return;
-                default:
-                    Console.WriteLine("Operation not found!");
-                    break;
+                var input = _reader.ReadValue<int>(
+                    "What you want change? 1 - Name, 2 - Price, 3 - Rooms, 4 - Change availability, 5 - Exit ",
+                    int.TryParse);
+                switch (input)
+                {
+                    case 1:
+                        var name = _reader.ReadString("Write new name: ");
+                        apartment.Name = name;
+                        Console.WriteLine("Apartment name changed!");
+                        break;
+                    case 2:
+                        var price = _reader.ReadValue<decimal>("Write new price: ", decimal.TryParse);
+                        apartment.Price = price;
+                        Console.WriteLine("Apartment price changed!");
+                        break;
+                    case 3:
+                        var rooms = _reader.ReadValue<short>("Write new rooms: ", short.TryParse);
+                        apartment.Rooms = rooms;
+                        Console.WriteLine("Apartment rooms changed!");
+                        break;
+                    case 4:
+                        var isAvailable = _reader.ReadBool("Write apartment is available:");
+                        apartment.IsAvailable = isAvailable;
+                        Console.WriteLine("Apartment is available changed!");
+                        break;
+                    case 5:
+                        return;
+                    default:
+                        Console.WriteLine("Operation not found!");
+                        break;
+                }
             }
+            
+        }
+        else
+        {
+            Console.WriteLine("ID is not found");
         }
     }
 
