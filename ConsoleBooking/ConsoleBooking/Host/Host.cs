@@ -13,15 +13,16 @@ public class Host
         return $"ID: {Id}, Name: {Name}, Number: {Number}";
     }
 
-    public void AddApartment(string name,decimal price,short rooms, bool isAvailable = true)
+    public void AddApartment(string name, decimal price, short rooms, bool isAvailable = true)
     {
-        Apartment apartment = new Apartment
+        var apartment = new Apartment
         {
             Name = name,
             Price = price,
             Rooms = rooms,
             IsAvailable = isAvailable
         };
+        
         Apartments.Add(apartment);
     }
 
@@ -32,6 +33,7 @@ public class Host
             Apartments.RemoveAt(id);
             return  true;
         }
+        
         return false;
     }
 

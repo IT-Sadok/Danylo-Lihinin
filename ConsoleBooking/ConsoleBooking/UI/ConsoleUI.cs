@@ -39,7 +39,7 @@ public class ConsoleUI
         }
     }
 
-    void OperationWithHosts()
+    private void OperationWithHosts()
     {
         while (true)
         {
@@ -63,7 +63,7 @@ public class ConsoleUI
         }
     }
 
-    void AddHost()
+    private void AddHost()
     {
         var name = _reader.ReadString("Write host name: ");
         var number = _reader.ReadValue<int>("Write host number: ", int.TryParse);
@@ -71,7 +71,7 @@ public class ConsoleUI
         Console.WriteLine("Host added!");
     }
 
-    void HostUpdate()
+    private void HostUpdate()
     {
         var hostID = _reader.ReadValue<int>("Write host ID: ", int.TryParse);
         var host = _service.GetHostById(hostID);
@@ -106,7 +106,7 @@ public class ConsoleUI
         }
     }
 
-    void DeleteHost()
+    private void DeleteHost()
     {
         var hostID = _reader.ReadValue<int>("Write host ID: ", int.TryParse);
         var isDeleted = _service.DeleteHost(hostID);
@@ -120,7 +120,7 @@ public class ConsoleUI
         }
     }
 
-    void OperationWithApartments(Host.Host host)
+    private void OperationWithApartments(Host.Host host)
     {
         while (true)
         {
@@ -148,7 +148,7 @@ public class ConsoleUI
         }
     }
 
-    void DeleteApartment(Host.Host host)
+    private void DeleteApartment(Host.Host host)
     {
         if (host.Apartments.Count > 0)
         {
@@ -166,7 +166,7 @@ public class ConsoleUI
         }
     }
 
-    void AddApartment(Host.Host host)
+    private void AddApartment(Host.Host host)
     {
         var apartmentName = _reader.ReadString("Write apartment name: ");
         var apartmentPrice = _reader.ReadValue<decimal>("Write apartment price: ", decimal.TryParse);
@@ -177,7 +177,7 @@ public class ConsoleUI
     }
 
 
-    void ApartmentUpdate(Host.Host host)
+    private void ApartmentUpdate(Host.Host host)
     {
         Console.WriteLine(host.ApartmentInfo());
         var apartmentID = _reader.ReadValue<int>("Write apartment ID: ", int.TryParse);
