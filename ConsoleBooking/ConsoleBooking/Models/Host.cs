@@ -1,5 +1,5 @@
-using ConsoleBooking.Apartments; 
-namespace ConsoleBooking.Host;
+
+namespace ConsoleBooking.Models;
 
 public class Host
 {

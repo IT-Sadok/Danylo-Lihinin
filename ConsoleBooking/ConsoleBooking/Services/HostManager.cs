@@ -1,12 +1,14 @@
-using ConsoleBooking.Apartments;
+using ConsoleBooking.Models;
+using ConsoleBooking.Data;
+using ConsoleBooking.Data.Interfaces;
 
-
-namespace ConsoleBooking.Host;
+namespace ConsoleBooking.Services;
 
 public class HostManager
 {
     private Dictionary<int, Host> _hosts = new Dictionary<int, Host>();
     private int _nextId = 1;
+    private IHostRepository _hostRepository;
 
     public void AddHost(string name, int number)
     {
@@ -44,5 +46,20 @@ public class HostManager
     public string ShowAll()
     {
         return String.Join("\n", _hosts.Values);
+    }
+
+    public void SaveAll()
+    {
+        _hostRepository.SaveAll(_hosts.Values);
+    }
+
+    public void LoadAll()
+    {
+        _hosts = _hostRepository.GetAll().ToDictionary(h => h.Id);
+    }
+
+    public HostManager(IHostRepository hostRepository)
+    {
+        _hostRepository = hostRepository;
     }
 }

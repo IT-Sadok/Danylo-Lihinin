@@ -1,7 +1,6 @@
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using ConsoleBooking.Apartments;
-using ConsoleBooking.Host;
+
+using ConsoleBooking.Models;
+using ConsoleBooking.Services;
 
 namespace ConsoleBooking.UI;
 
@@ -13,10 +12,11 @@ public class ConsoleUI
 
     public void Run()
     {
+        _service.LoadAll();
         while (_isRunning)
         {
             Console.WriteLine();
-            var input = _reader.ReadValue<int>("1 - Show all hosts\n2 - Host info\n3 - Operation with hosts\n4 - Exit",
+            var input = _reader.ReadValue<int>("1 - Show all hosts\n2 - Host info\n3 - Operation with hosts\n4 - Save all changes\n5 - Exit",
                 int.TryParse);
 
             switch (input)
@@ -33,6 +33,10 @@ public class ConsoleUI
                     OperationWithHosts();
                     break;
                 case 4:
+                    _service.SaveAll();
+                    Console.WriteLine("Information saved!");
+                    break;
+                case 5:
                     _isRunning = false;
                     break;
             }
@@ -120,7 +124,7 @@ public class ConsoleUI
         }
     }
 
-    private void OperationWithApartments(Host.Host host)
+    private void OperationWithApartments(Host host)
     {
         while (true)
         {
@@ -148,7 +152,7 @@ public class ConsoleUI
         }
     }
 
-    private void DeleteApartment(Host.Host host)
+    private void DeleteApartment(Host host)
     {
         if (host.Apartments.Count > 0)
         {
@@ -166,7 +170,7 @@ public class ConsoleUI
         }
     }
 
-    private void AddApartment(Host.Host host)
+    private void AddApartment(Host host)
     {
         var apartmentName = _reader.ReadString("Write apartment name: ");
         var apartmentPrice = _reader.ReadValue<decimal>("Write apartment price: ", decimal.TryParse);
@@ -177,7 +181,7 @@ public class ConsoleUI
     }
 
 
-    private void ApartmentUpdate(Host.Host host)
+    private void ApartmentUpdate(Host host)
     {
         Console.WriteLine(host.ApartmentInfo());
         var apartmentID = _reader.ReadValue<int>("Write apartment ID: ", int.TryParse);
