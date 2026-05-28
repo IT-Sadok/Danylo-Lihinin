@@ -1,1 +1,1 @@
-[{"Id":1,"Name":"Anton","Number":66148867}]
+[{"Id":1,"Name":"Anton","Number":66148867,"Apartments":[{"Name":"Darnitsa","IsAvailable":true,"Price":11000,"Rooms":1}]}]
