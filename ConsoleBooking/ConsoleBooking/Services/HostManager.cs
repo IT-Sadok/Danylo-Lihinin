@@ -7,19 +7,17 @@ namespace ConsoleBooking.Services;
 public class HostManager
 {
     private Dictionary<int, Host> _hosts = new Dictionary<int, Host>();
-    private int _nextId = 1;
     private IHostRepository _hostRepository;
 
     public void AddHost(string name, int number)
     {
         var host = new Host
         {
-            Id = _nextId,
+            Id = GenerateId(),
             Name = name,
             Number = number,
         };
         _hosts[host.Id] = host;
-        _nextId++;
     }
 
     public bool DeleteHost(int id)
@@ -58,6 +56,16 @@ public class HostManager
         _hosts = _hostRepository.GetAll().ToDictionary(h => h.Id);
     }
 
+    private int GenerateId()
+    {
+        int id = 1;
+
+        while (_hosts.ContainsKey(id))
+        {
+            id++;
+        }
+        return id;
+    }
     public HostManager(IHostRepository hostRepository)
     {
         _hostRepository = hostRepository;

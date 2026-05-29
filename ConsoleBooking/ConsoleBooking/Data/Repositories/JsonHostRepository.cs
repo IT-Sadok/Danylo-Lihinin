@@ -8,10 +8,10 @@ public class JsonHostRepository : IHostRepository
 {
     private readonly string _filePath;
 
-    public JsonHostRepository(string path = @"Data\Storage\hosts.json")
+    public JsonHostRepository()
     {
-        var projectDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
-        _filePath = Path.Combine(projectDirectory, path);
+        var projectDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\.."));
+        _filePath = Path.Combine(projectDirectory, "Data", "Storage", "hosts.json");
     }
 
     public IEnumerable<Host> GetAll()
@@ -28,7 +28,7 @@ public class JsonHostRepository : IHostRepository
         }
 
         var result = JsonSerializer.Deserialize<List<Host>>(fileText);
-        return result ?? Enumerable.Empty<Host>();;
+        return result ?? Enumerable.Empty<Host>();
     }
 
     public void SaveAll(IEnumerable<Host> hosts)
