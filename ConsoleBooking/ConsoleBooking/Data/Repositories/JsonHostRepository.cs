@@ -6,12 +6,51 @@ namespace ConsoleBooking.Data.Repositories;
 
 public class JsonHostRepository : IHostRepository
 {
+    private Dictionary<int, Host> _hosts = new Dictionary<int, Host>();
     private readonly string _filePath;
 
     public JsonHostRepository()
     {
         var projectDirectory = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\.."));
         _filePath = Path.Combine(projectDirectory, "Data", "Storage", "hosts.json");
+    }
+
+    public void AddHost(Host host)
+    {
+        _hosts.Add(host.Id, host);
+    }
+
+    public Host? GetHostById(int id)
+    {
+        if (_hosts.TryGetValue(id, out var host))
+            return host;
+        return null;
+    }
+
+    List<Host> IHostRepository.GetAllHosts()
+    {
+        return  _hosts.Values.ToList();
+    }
+
+    public Dictionary<int, Host> GetAllHosts()
+    {
+        return _hosts;
+    }
+
+    public void UpdateHost(Host host)
+    {
+        _hosts[host.Id] = host;
+    }
+
+    public bool DeleteHostById(int id)
+    {
+        if (_hosts.TryGetValue(id, out var host))
+        {
+            _hosts.Remove(id);
+            return true;
+        }
+
+        return false;
     }
 
     public IEnumerable<Host> GetAll()
@@ -31,12 +70,12 @@ public class JsonHostRepository : IHostRepository
         return result ?? Enumerable.Empty<Host>();
     }
 
-    public void SaveAll(IEnumerable<Host> hosts)
+    public void SaveAll()
     {
-        hosts ??= new List<Host>();
+        var hosts = _hosts.Values.ToList();
         var json = JsonSerializer.Serialize(hosts);
         var directory = Path.GetDirectoryName(_filePath);
-        if(!string.IsNullOrEmpty(directory))
+        if (!string.IsNullOrEmpty(directory))
             Directory.CreateDirectory(directory);
         File.WriteAllText(_filePath, json);
     }

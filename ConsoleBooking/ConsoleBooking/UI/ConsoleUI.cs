@@ -1,13 +1,15 @@
 
 using ConsoleBooking.Models;
 using ConsoleBooking.Services;
+using ConsoleBooking.Services.Dtos.Apartments;
+using ConsoleBooking.Services.Dtos.Hosts;
 
 namespace ConsoleBooking.UI;
 
 public class ConsoleUI
 {
     private bool _isRunning = true;
-    private HostManager _service { get; }
+    private HostService _service { get; }
     private ConsoleUIReader _reader = new ConsoleUIReader();
 
     public void Run()
@@ -22,12 +24,10 @@ public class ConsoleUI
             switch (input)
             {
                 case 1:
-                    Console.WriteLine(_service.ShowAll());
+                    ShowAll();
                     break;
                 case 2:
-                    int inputId = _reader.ReadValue<int>("Write hosts ID: ", int.TryParse);
-                    var apartmentInfo = _service.GetHostById(inputId)?.ApartmentInfo() ?? "Host is not found";
-                    Console.WriteLine(apartmentInfo);
+                    HostInfoById();
                     break;
                 case 3:
                     OperationWithHosts();
@@ -40,6 +40,33 @@ public class ConsoleUI
                     _isRunning = false;
                     break;
             }
+        }
+    }
+
+    private void ShowAll()
+    {
+        foreach (var host in _service.GetAllHosts())
+        {
+            Console.WriteLine($"ID: {host.Id}, Name: {host.Name}, Number: {host.Number}");
+        }
+    }
+
+    private void HostInfoById()
+    {
+        var inputId =  _reader.ReadValue<int>("Write host ID: ", int.TryParse);
+        var host = _service.GetHostById(inputId);
+        if (host != null)
+        {
+            Console.WriteLine($"ID: {host.Id}, Name: {host.Name}, Number: {host.Number}");
+            ApartmentInfo(host);
+        }
+    }
+
+    private void ApartmentInfo(HostDto host)
+    {
+        foreach (var apartment in host.Apartments)
+        {
+            Console.WriteLine($"Name: {apartment.Name}, Price: {apartment.Price}, Rooms: {apartment.Rooms}, Is available: {apartment.IsAvailable}");
         }
     }
 
@@ -69,9 +96,10 @@ public class ConsoleUI
 
     private void AddHost()
     {
-        var name = _reader.ReadString("Write host name: ");
-        var number = _reader.ReadValue<int>("Write host number: ", int.TryParse);
-        _service.AddHost(name, number);
+        var host = new CreateHostDto();
+         host.Name = _reader.ReadString("Write host name: ");
+         host.Number = _reader.ReadValue<int>("Write host number: ", int.TryParse);
+        _service.AddHost(host);
         Console.WriteLine("Host added!");
     }
 
@@ -91,13 +119,13 @@ public class ConsoleUI
             switch (result)
             {
                 case 1:
-                    var newName = _reader.ReadString("Write new host name: ");
-                    host.Name = newName;
+                    host.Name = _reader.ReadString("Write new host name: ");
+                    _service.UpdateHost(host);
                     Console.WriteLine("Host name changed!");
                     break;
                 case 2:
-                    var newNumber = _reader.ReadValue<int>("Write new host number: ", int.TryParse);
-                    host.Number = newNumber;
+                    host.Number = _reader.ReadValue<int>("Write new host number: ", int.TryParse);
+                    _service.UpdateHost(host);
                     Console.WriteLine("Host number changed!");
                     break;
                 case 3:
@@ -124,7 +152,7 @@ public class ConsoleUI
         }
     }
 
-    private void OperationWithApartments(Host host)
+    private void OperationWithApartments(HostDto host)
     {
         while (true)
         {
@@ -152,13 +180,13 @@ public class ConsoleUI
         }
     }
 
-    private void DeleteApartment(Host host)
+    private void DeleteApartment(HostDto host)
     {
         if (host.Apartments.Count > 0)
         {
-            Console.WriteLine(host.ApartmentInfo());
+            ApartmentInfo(host);
             var apartmentDeleteID = _reader.ReadValue<int>("Write apartment ID: ", int.TryParse);
-            var isDeleted = host.RemoveApartment(apartmentDeleteID - 1);
+            bool isDeleted = _service.RemoveApartment(host.Id, apartmentDeleteID);
             if (isDeleted)
                 Console.WriteLine("Apartment deleted!");
             else
@@ -170,20 +198,23 @@ public class ConsoleUI
         }
     }
 
-    private void AddApartment(Host host)
+    private void AddApartment(HostDto host)
     {
-        var apartmentName = _reader.ReadString("Write apartment name: ");
-        var apartmentPrice = _reader.ReadValue<decimal>("Write apartment price: ", decimal.TryParse);
-        var apartmentRooms = _reader.ReadValue<short>("Write apartment rooms: ", short.TryParse);
-        var apartmentIsAvailable = _reader.ReadBool("Write apartment is available:");
-        host.AddApartment(apartmentName, apartmentPrice, apartmentRooms, apartmentIsAvailable);
+        var newApartment = new ApartmentDto
+        {
+            Name = _reader.ReadString("Write apartment name: "),
+            Price = _reader.ReadValue<decimal>("Write apartment price: ", decimal.TryParse),
+            Rooms = _reader.ReadValue<short>("Write apartment rooms: ", short.TryParse),
+            IsAvailable = _reader.ReadBool("Write apartment is available:")
+        };
+        _service.AddApartment(newApartment, host.Id);
         Console.WriteLine("Apartment added!");
     }
 
 
-    private void ApartmentUpdate(Host host)
+    private void ApartmentUpdate(HostDto host)
     {
-        Console.WriteLine(host.ApartmentInfo());
+        ApartmentInfo(host);
         var apartmentID = _reader.ReadValue<int>("Write apartment ID: ", int.TryParse);
         if (apartmentID > 0 && apartmentID <= host.Apartments.Count)
         {
@@ -197,22 +228,22 @@ public class ConsoleUI
                 {
                     case 1:
                         var name = _reader.ReadString("Write new name: ");
-                        apartment.Name = name;
+                        _service.UpdateApartment(apartment, apartmentID, host.Id);
                         Console.WriteLine("Apartment name changed!");
                         break;
                     case 2:
                         var price = _reader.ReadValue<decimal>("Write new price: ", decimal.TryParse);
-                        apartment.Price = price;
+                        _service.UpdateApartment(apartment, apartmentID, host.Id);
                         Console.WriteLine("Apartment price changed!");
                         break;
                     case 3:
                         var rooms = _reader.ReadValue<short>("Write new rooms: ", short.TryParse);
-                        apartment.Rooms = rooms;
+                        _service.UpdateApartment(apartment, apartmentID, host.Id);
                         Console.WriteLine("Apartment rooms changed!");
                         break;
                     case 4:
                         var isAvailable = _reader.ReadBool("Write apartment is available:");
-                        apartment.IsAvailable = isAvailable;
+                        _service.UpdateApartment(apartment, apartmentID, host.Id);
                         Console.WriteLine("Apartment is available changed!");
                         break;
                     case 5:
@@ -230,7 +261,7 @@ public class ConsoleUI
         }
     }
 
-    public ConsoleUI(HostManager service)
+    public ConsoleUI(HostService service)
     {
         _service = service;
     }
