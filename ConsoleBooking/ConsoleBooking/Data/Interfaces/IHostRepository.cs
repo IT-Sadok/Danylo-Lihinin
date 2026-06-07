@@ -9,7 +9,10 @@ public interface IHostRepository
     public List<Host> GetAllHosts();
     public void UpdateHost(Host host);
     public bool DeleteHostById(int id);
-    public IEnumerable<Host>  GetAll();
+    public void AddApartment(Apartment apartment, int hostId);
+    public void UpdateApartment(Apartment apartment, int hostId, int apartmentId);
+    bool DeleteApartmentById(int hostId, int apartmentId);
+    public void  LoadAll();
     
     public void SaveAll();
 }

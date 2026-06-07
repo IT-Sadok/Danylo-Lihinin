@@ -1,6 +1,7 @@
 using System.Text.Json;
 using ConsoleBooking.Data.Interfaces;
 using ConsoleBooking.Models;
+using System.Linq;
 
 namespace ConsoleBooking.Data.Repositories;
 
@@ -8,6 +9,7 @@ public class JsonHostRepository : IHostRepository
 {
     private Dictionary<int, Host> _hosts = new Dictionary<int, Host>();
     private readonly string _filePath;
+    private int _nextId;
 
     public JsonHostRepository()
     {
@@ -17,6 +19,7 @@ public class JsonHostRepository : IHostRepository
 
     public void AddHost(Host host)
     {
+        host.Id = _nextId++;
         _hosts.Add(host.Id, host);
     }
 
@@ -29,17 +32,39 @@ public class JsonHostRepository : IHostRepository
 
     List<Host> IHostRepository.GetAllHosts()
     {
-        return  _hosts.Values.ToList();
-    }
-
-    public Dictionary<int, Host> GetAllHosts()
-    {
-        return _hosts;
+        return _hosts.Values.ToList();
     }
 
     public void UpdateHost(Host host)
     {
         _hosts[host.Id] = host;
+    }
+
+    public void AddApartment(Apartment apartment, int hostId)
+    {
+        _hosts[hostId].Apartments.Add(apartment);
+    }
+
+    public void UpdateApartment(Apartment apartment, int hostId, int apartmentId)
+    {
+        _hosts[hostId].Apartments[apartmentId - 1] = apartment;
+    }
+
+    public bool DeleteApartmentById(int hostId, int apartmentId)
+    {
+        if (_hosts.TryGetValue(hostId, out var host))
+        {
+            if (apartmentId > 0 || apartmentId < host.Apartments.Count)
+            {
+                if (host.Apartments[apartmentId] != null)
+                {
+                    host.Apartments.RemoveAt(apartmentId);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public bool DeleteHostById(int id)
@@ -53,21 +78,18 @@ public class JsonHostRepository : IHostRepository
         return false;
     }
 
-    public IEnumerable<Host> GetAll()
+    public void LoadAll()
     {
-        if (!File.Exists(_filePath))
+        if (File.Exists(_filePath))
         {
-            return Enumerable.Empty<Host>();
+            var fileText = File.ReadAllText(_filePath);
+            if (!string.IsNullOrEmpty(fileText))
+            {
+                var result = JsonSerializer.Deserialize<List<Host>>(fileText);
+                _hosts = result.ToDictionary(h => h.Id, h => h);
+                _nextId = _hosts.Keys.DefaultIfEmpty(0).Max() + 1;
+            }
         }
-
-        var fileText = File.ReadAllText(_filePath);
-        if (string.IsNullOrEmpty(fileText))
-        {
-            return Enumerable.Empty<Host>();
-        }
-
-        var result = JsonSerializer.Deserialize<List<Host>>(fileText);
-        return result ?? Enumerable.Empty<Host>();
     }
 
     public void SaveAll()

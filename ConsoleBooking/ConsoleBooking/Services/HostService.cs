@@ -11,7 +11,6 @@ public class HostService
 {
     private IHostMapper _hostMapper;
     private IHostRepository _hostRepository;
-    private int _nextId = 1;
 
     public HostService(IHostRepository hostRepository, IHostMapper hostMapper)
     {
@@ -22,7 +21,6 @@ public class HostService
     public void AddHost(CreateHostDto hostDto)
     {
         var host = _hostMapper.MapToHost(hostDto);
-        host.Id = _nextId++;
         _hostRepository.AddHost(host);
     }
 
@@ -54,29 +52,21 @@ public class HostService
 
     public bool RemoveApartment(int hostId, int apartmentId)
     {
-        var host = _hostRepository.GetHostById(hostId);
-        if (host is null)
-            return false;
-        int index = apartmentId - 1;
-        if(index < 0 || index > host.Apartments.Count)
-            return false;
-        host.Apartments.RemoveAt(index);
-        return true;
+        return _hostRepository.DeleteApartmentById(hostId,apartmentId - 1);
     }
 
     public void AddApartment(ApartmentDto apartmentDto, int hostId)
     {
         var apartment = _hostMapper.MapToApartment(apartmentDto);
-        _hostRepository.GetHostById(hostId).Apartments.Add(apartment);
+        _hostRepository.AddApartment(apartment, hostId);
     }
 
     public void UpdateApartment(ApartmentDto apartmentDto, int hostId, int apartmentId)
     {
-        var host = _hostRepository.GetHostById(hostId);
-        host.Apartments[apartmentId] = _hostMapper.MapToApartment(apartmentDto);
+        _hostRepository.UpdateApartment(_hostMapper.MapToApartment(apartmentDto), hostId, apartmentId);
     }
 
     public void SaveAll() => _hostRepository.SaveAll();
 
-    public void LoadAll() => _hostRepository.GetAll();
+    public void LoadAll() => _hostRepository.LoadAll();
 }
