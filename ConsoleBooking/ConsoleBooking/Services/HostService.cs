@@ -63,7 +63,7 @@ public class HostService
 
     public void UpdateApartment(ApartmentDto apartmentDto, int hostId, int apartmentId)
     {
-        _hostRepository.UpdateApartment(_hostMapper.MapToApartment(apartmentDto), hostId, apartmentId);
+        _hostRepository.UpdateApartment(_hostMapper.MapToApartment(apartmentDto), hostId, apartmentId - 1);
     }
 
     public void SaveAll() => _hostRepository.SaveAll();

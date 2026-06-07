@@ -47,7 +47,7 @@ public class JsonHostRepository : IHostRepository
 
     public void UpdateApartment(Apartment apartment, int hostId, int apartmentId)
     {
-        _hosts[hostId].Apartments[apartmentId - 1] = apartment;
+        _hosts[hostId].Apartments[apartmentId] = apartment;
     }
 
     public bool DeleteApartmentById(int hostId, int apartmentId)
