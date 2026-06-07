@@ -34,8 +34,9 @@ public class HostService
         var host = _hostRepository.GetHostById(id);
         if (host != null)
         {
-           return _hostMapper.MapToHostDto(host);
+            return _hostMapper.MapToHostDto(host);
         }
+
         return null;
     }
 
@@ -52,17 +53,25 @@ public class HostService
 
     public bool RemoveApartment(int hostId, int apartmentId)
     {
-        return _hostRepository.DeleteApartmentById(hostId,apartmentId - 1);
+        return _hostRepository.DeleteApartmentById(hostId, apartmentId - 1);
     }
 
     public void AddApartment(ApartmentDto apartmentDto, int hostId)
     {
+        if (apartmentDto.Price < 0)
+            throw new ArgumentException("Price cannot be negative");
+        if(apartmentDto.Rooms > 10)
+            throw new ArgumentException("Rooms cannot be more than 10");
         var apartment = _hostMapper.MapToApartment(apartmentDto);
         _hostRepository.AddApartment(apartment, hostId);
     }
 
     public void UpdateApartment(ApartmentDto apartmentDto, int hostId, int apartmentId)
     {
+        if (apartmentDto.Price < 0)
+            throw new ArgumentException("Price cannot be negative");
+        if(apartmentDto.Rooms > 10)
+            throw new ArgumentException("Rooms cannot be more than 10");
         _hostRepository.UpdateApartment(_hostMapper.MapToApartment(apartmentDto), hostId, apartmentId - 1);
     }
 

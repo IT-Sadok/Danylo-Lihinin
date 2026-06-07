@@ -54,7 +54,7 @@ public class JsonHostRepository : IHostRepository
     {
         if (_hosts.TryGetValue(hostId, out var host))
         {
-            if (apartmentId > 0 || apartmentId < host.Apartments.Count)
+            if (apartmentId >= 0 && apartmentId < host.Apartments.Count)
             {
                 if (host.Apartments[apartmentId] != null)
                 {

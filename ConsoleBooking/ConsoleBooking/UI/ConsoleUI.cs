@@ -27,7 +27,7 @@ public class ConsoleUI
                     ShowAll();
                     break;
                 case 2:
-                    HostInfoById();
+                    HostInfoById(_reader.ReadValue<int>("Write host ID: ", int.TryParse));
                     break;
                 case 3:
                     OperationWithHosts();
@@ -51,10 +51,9 @@ public class ConsoleUI
         }
     }
 
-    private void HostInfoById()
+    private void HostInfoById(int hostId)
     {
-        var inputId = _reader.ReadValue<int>("Write host ID: ", int.TryParse);
-        var host = _service.GetHostById(inputId);
+        var host = _service.GetHostById(hostId);
         if (host != null)
         {
             Console.WriteLine($"ID: {host.Id}, Name: {host.Name}, Number: {host.Number}");
@@ -68,10 +67,17 @@ public class ConsoleUI
 
     private void ApartmentInfo(HostDto host)
     {
-        foreach (var apartment in host.Apartments)
+        if (host.Apartments.Count != 0)
         {
-            Console.WriteLine(
-                $"Name: {apartment.Name}, Price: {apartment.Price}, Rooms: {apartment.Rooms}, Is available: {apartment.IsAvailable}");
+            foreach (var apartment in host.Apartments)
+            {
+                Console.WriteLine(
+                    $"Name: {apartment.Name}, Price: {apartment.Price}, Rooms: {apartment.Rooms}, Is available: {apartment.IsAvailable}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Host dont have apartments");
         }
     }
 
@@ -118,7 +124,7 @@ public class ConsoleUI
         }
         else
         {
-            Console.WriteLine(host.ToString());
+            HostInfoById(hostID);
             var result = _reader.ReadValue<int>("What you want change: 1 - Name, 2 - Number, 3 - Apartments",
                 int.TryParse);
             switch (result)
@@ -212,8 +218,15 @@ public class ConsoleUI
             Rooms = _reader.ReadValue<short>("Write apartment rooms: ", short.TryParse),
             IsAvailable = _reader.ReadBool("Write apartment is available:")
         };
-        _service.AddApartment(newApartment, host.Id);
-        Console.WriteLine("Apartment added!");
+        try
+        {
+            _service.AddApartment(newApartment, host.Id);
+            Console.WriteLine("Apartment added!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 
 
@@ -237,31 +250,34 @@ public class ConsoleUI
         while (true)
         {
             var input = _reader.ReadValue<int>(
-                "What you want change? 1 - Name, 2 - Price, 3 - Rooms, 4 - Change availability, 5 - Exit ",
+                "What you want change? 1 - Name, 2 - Price, 3 - Rooms, 4 - Change availability, 5 - Apply changes 6 - Exit ",
                 int.TryParse);
             switch (input)
             {
                 case 1:
                     apartment.Name = _reader.ReadString("Write new name: ");
-                    _service.UpdateApartment(apartment, apartmentID, host.Id);
-                    Console.WriteLine("Apartment name changed!");
                     break;
                 case 2:
                     apartment.Price = _reader.ReadValue<decimal>("Write new price: ", decimal.TryParse);
-                    _service.UpdateApartment(apartment, apartmentID, host.Id);
-                    Console.WriteLine("Apartment price changed!");
                     break;
                 case 3:
                     apartment.Rooms = _reader.ReadValue<short>("Write new rooms: ", short.TryParse);
-                    _service.UpdateApartment(apartment, apartmentID, host.Id);
-                    Console.WriteLine("Apartment rooms changed!");
                     break;
                 case 4:
                     apartment.IsAvailable = _reader.ReadBool("Write apartment is available:");
-                    _service.UpdateApartment(apartment, apartmentID, host.Id);
-                    Console.WriteLine("Apartment is available changed!");
                     break;
                 case 5:
+                    try
+                    {
+                        _service.UpdateApartment(apartment, host.Id, apartmentID);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+
+                    break;
+                case 6:
                     return;
                 default:
                     Console.WriteLine("Operation not found!");
