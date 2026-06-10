@@ -1,4 +1,4 @@
-namespace ConsoleBooking.Apartments;
+namespace ConsoleBooking.Models;
 
 public class Apartment
 {

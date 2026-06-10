@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Interface\" />
+      <Folder Include="Data\Storage\" />
     </ItemGroup>
 
 </Project>
