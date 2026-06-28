@@ -3,6 +3,7 @@ using ConsoleBooking.Services;
 using ConsoleBooking.Services.Dtos.Apartments;
 using ConsoleBooking.Services.Dtos.Hosts;
 
+
 namespace ConsoleBooking.UI;
 
 public class ConsoleUI
@@ -10,6 +11,7 @@ public class ConsoleUI
     private bool _isRunning = true;
     private HostService _service { get; }
     private ConsoleUIReader _reader = new ConsoleUIReader();
+    private RaceCondtionSimulation.RaceConditionSimulation _sim;
 
     public void Run()
     {
@@ -18,7 +20,7 @@ public class ConsoleUI
         {
             Console.WriteLine();
             var input = _reader.ReadValue<int>(
-                "1 - Show all hosts\n2 - Host info\n3 - Operation with hosts\n4 - Save all changes\n5 - Exit",
+                "1 - Show all hosts\n2 - Host info\n3 - Operation with hosts\n4 - Save all changes\n5 - Exit\n 6 - Race condtion simulation",
                 int.TryParse);
 
             switch (input)
@@ -38,6 +40,9 @@ public class ConsoleUI
                     break;
                 case 5:
                     _isRunning = false;
+                    break;
+                case 6:
+                    _sim.Run();
                     break;
             }
         }
@@ -286,8 +291,9 @@ public class ConsoleUI
         }
     }
 
-    public ConsoleUI(HostService service)
+    public ConsoleUI(HostService service, RaceCondtionSimulation.RaceConditionSimulation simulation)
     {
         _service = service;
+        _sim = simulation;
     }
 }

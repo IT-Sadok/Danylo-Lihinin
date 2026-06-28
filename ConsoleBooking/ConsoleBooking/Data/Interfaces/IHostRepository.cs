@@ -13,6 +13,5 @@ public interface IHostRepository
     public void UpdateApartment(Apartment apartment, int hostId, int apartmentId);
     bool DeleteApartmentById(int hostId, int apartmentId);
     public void  LoadAll();
-    
     public void SaveAll();
 }
