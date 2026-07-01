@@ -11,11 +11,13 @@ public class HostService
 {
     private IHostMapper _hostMapper;
     private IHostRepository _hostRepository;
+    private RaceCondtionSimulation.RaceConditionSimulation _simulation;
 
-    public HostService(IHostRepository hostRepository, IHostMapper hostMapper)
+    public HostService(IHostRepository hostRepository, IHostMapper hostMapper, RaceCondtionSimulation.RaceConditionSimulation simulation)
     {
         _hostRepository = hostRepository;
         _hostMapper = hostMapper;
+        _simulation = simulation;
     }
 
     public void AddHost(CreateHostDto hostDto)
@@ -73,6 +75,11 @@ public class HostService
         if(apartmentDto.Rooms > 10)
             throw new ArgumentException("Rooms cannot be more than 10");
         _hostRepository.UpdateApartment(_hostMapper.MapToApartment(apartmentDto), hostId, apartmentId - 1);
+    }
+
+    public void RunRaceConditionSimulation()
+    {
+        _simulation.Run();
     }
 
     public void SaveAll() => _hostRepository.SaveAll();

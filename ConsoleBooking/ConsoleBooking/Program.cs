@@ -8,11 +8,10 @@ using ConsoleBooking.Services.Mapping;
 
 var repository = new JsonHostRepository();
 var mapper = new HostMapper();
-var hostManager = new HostService(repository,mapper);
-RaceConditionSimulation sim  = new RaceConditionSimulation
+RaceConditionSimulation sim = new RaceConditionSimulation
 {
-    _hostRepository = repository,
-    _hostService = hostManager,
+HostRepository =  repository,
 };
-var ui = new ConsoleUI(hostManager,sim);
+var hostManager = new HostService(repository,mapper,sim);
+var ui = new ConsoleUI(hostManager);
 ui.Run();

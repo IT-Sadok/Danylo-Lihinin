@@ -11,7 +11,6 @@ public class ConsoleUI
     private bool _isRunning = true;
     private HostService _service { get; }
     private ConsoleUIReader _reader = new ConsoleUIReader();
-    private RaceCondtionSimulation.RaceConditionSimulation _sim;
 
     public void Run()
     {
@@ -20,7 +19,7 @@ public class ConsoleUI
         {
             Console.WriteLine();
             var input = _reader.ReadValue<int>(
-                "1 - Show all hosts\n2 - Host info\n3 - Operation with hosts\n4 - Save all changes\n5 - Exit\n 6 - Race condtion simulation",
+                "1 - Show all hosts\n2 - Host info\n3 - Operation with hosts\n4 - Save all changes\n5 - Exit\n6 - Race condtion simulation",
                 int.TryParse);
 
             switch (input)
@@ -42,7 +41,14 @@ public class ConsoleUI
                     _isRunning = false;
                     break;
                 case 6:
-                    _sim.Run();
+                    try
+                    {
+                        _service.RunRaceConditionSimulation();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                     break;
             }
         }
@@ -291,9 +297,8 @@ public class ConsoleUI
         }
     }
 
-    public ConsoleUI(HostService service, RaceCondtionSimulation.RaceConditionSimulation simulation)
+    public ConsoleUI(HostService service)
     {
         _service = service;
-        _sim = simulation;
     }
 }
