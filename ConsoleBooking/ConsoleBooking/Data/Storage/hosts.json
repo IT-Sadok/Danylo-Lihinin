@@ -1,1 +1,1 @@
-[{"Id":2,"Name":"Anton","Number":525254353,"Apartments":[]},{"Id":1,"Name":"Dima","Number":5535254,"Apartments":[{"Name":"Darnitsa","IsAvailable":true,"Price":9500,"Rooms":1}]}]
+[{"Id":2,"Name":"Anton","Number":525254353,"Apartments":[{"Name":"Obolon","IsAvailable":true,"Price":7500,"Rooms":1}]},{"Id":1,"Name":"Dima","Number":5535254,"Apartments":[{"Name":"Darnitsa","IsAvailable":true,"Price":9500,"Rooms":1}]}]
