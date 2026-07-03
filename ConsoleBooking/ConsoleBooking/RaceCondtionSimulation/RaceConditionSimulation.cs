@@ -35,13 +35,13 @@ public class RaceConditionSimulation
         return apartment;
     }
 
-    public void SimulateWithoutLock(Apartment apartment)
+    public async Task SimulateWithoutLock(Apartment apartment)
     {
         var priceBefore = apartment.Price;
         Console.WriteLine($"Apartment info before: {apartment.ToString()}");
         Task task1 = Task.Run(() => IncreasePrice(apartment));
         Task task2 = Task.Run(() => IncreasePrice(apartment));
-        Task.WaitAll(task1, task2);
+        await Task.WhenAll(task1, task2);
         Console.WriteLine($"Result simulation without lock objects:");
         Console.WriteLine($"Actual Price: {apartment.Price}");
         Console.WriteLine($"Expected Price: {priceBefore + 1000}");
@@ -49,13 +49,13 @@ public class RaceConditionSimulation
         Console.WriteLine("=======================================================================");
     }
 
-    public void SimulateWithLock(Apartment apartment)
+    public async Task SimulateWithLock(Apartment apartment)
     {
         var priceBefore = apartment.Price;
         Console.WriteLine($"Apartment info before: {apartment.ToString()}");
         Task task1 = Task.Run(() => IncreasePriceWithLock(apartment));
         Task task2 = Task.Run(() => IncreasePriceWithLock(apartment));
-        Task.WaitAll(task1, task2);
+        await Task.WhenAll(task1, task2);
         Console.WriteLine($"Result simulation with lock objects:");
         Console.WriteLine($"Actual Price: {apartment.Price}");
         Console.WriteLine($"Expected Price: {priceBefore + 1000}");
