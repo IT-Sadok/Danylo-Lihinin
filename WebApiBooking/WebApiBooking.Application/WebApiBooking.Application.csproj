@@ -10,4 +10,10 @@
       <ProjectReference Include="..\WebApiBooking.Domain\WebApiBooking.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="12.1.1" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+      <PackageReference Include="Mapster" Version="10.0.11" />
+    </ItemGroup>
+
 </Project>

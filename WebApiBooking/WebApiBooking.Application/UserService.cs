@@ -1,4 +1,6 @@
-﻿using WebApiBooking.Application.Interface;
+﻿using Mapster;
+using WebApiBooking.Application.DTOs;
+using WebApiBooking.Application.Interface;
 using WebApiBooking.Domain;
 using WebApiBooking.Domain.Interfaces;
 
@@ -8,24 +10,24 @@ public class UserService : IUserService
 {
     IUserRepository _userRepository;
 
-    public async Task AddUserAsync(User user)
+    public async Task<List<UserDto>> GetUsersAsync()
     {
-        await _userRepository.AddAsync(user);
-        await _userRepository.SaveChangesAsync();
+        var users = await _userRepository.GetUsersAsync();
+        return users.Adapt<List<UserDto>>();
     }
 
-    public Task<List<User>> GetUsersAsync()
+    public async Task<UserDto?> GetUserByIdAsync(int id)
     {
-        return  _userRepository.GetUsersAsync();
+        var user = await _userRepository.GetByIdAsync(id);
+        return user.Adapt<UserDto>();
     }
 
-    public Task<User> GetUserByIdAsync(int id)
+    public async Task UpdateUserAsync(UpdateUserDto userDto, int id)
     {
-        return _userRepository.GetByIdAsync(id);
-    }
-
-    public async Task UpdateUserAsync(User user)
-    {
+        var user = await _userRepository.GetByIdAsync(id);
+        if (user is null)
+            throw new KeyNotFoundException();
+        userDto.Adapt(user);
         _userRepository.Update(user);
         await _userRepository.SaveChangesAsync();
     }
