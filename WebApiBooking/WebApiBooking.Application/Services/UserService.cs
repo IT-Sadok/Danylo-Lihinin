@@ -4,7 +4,7 @@ using WebApiBooking.Application.Interface;
 using WebApiBooking.Domain;
 using WebApiBooking.Domain.Interfaces;
 
-namespace WebApiBooking.Application;
+namespace WebApiBooking.Application.Services;
 
 public class UserService : IUserService
 {
