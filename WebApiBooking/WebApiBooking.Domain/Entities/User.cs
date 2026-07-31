@@ -1,12 +1,8 @@
-﻿using WebApiBooking.Domain.Enums;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace WebApiBooking.Domain;
 
-public class User
+public class User : IdentityUser<int>
 {
-    public int Id { get; set; }
     public string Name { get; set; }
-    public string Email { get; set; }
-    public string HashPassword { get; set; }
-    public UserRole Role { get; set; }
 }

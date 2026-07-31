@@ -1,6 +1,6 @@
 using FluentValidation;
 using WebApiBooking.Application.DTOs;
-using WebApiBooking.Domain.Enums;
+using WebApiBooking.Domain.Constants;
 
 namespace WebApiBooking.Application.Validators;
 
@@ -19,6 +19,6 @@ public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
             .MinimumLength(6);
         RuleFor(u => u.Role)
             .IsInEnum()
-            .Must(role => role != UserRole.Admin);
+            .Must(role => role != Roles.Admin);
     }
 }

@@ -4,5 +4,5 @@ namespace WebApiBooking.Application.Interface;
 
 public interface IJwtService
 {
-    public string GenerateJwtToken(User user);
+    public string GenerateJwtToken(User user, IList<string> roles);
 }

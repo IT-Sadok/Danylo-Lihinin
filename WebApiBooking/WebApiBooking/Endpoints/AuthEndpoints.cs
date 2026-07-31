@@ -1,6 +1,5 @@
 using WebApiBooking.Application.DTOs;
 using WebApiBooking.Application.Interface;
-using WebApiBooking.Filters;
 
 namespace WebApiBooking.Endpoints;
 
@@ -14,12 +13,12 @@ public static class AuthEndpoints
         {
             var token = await authService.RegisterAsync(dto);
             return Results.Ok(new { token });
-        }).AddEndpointFilter<ValidationFilter<RegisterUserDto>>();
-        
-        group.MapPost("/login", async (LoginUserDto dto,IAuthService authService) =>
+        });
+
+        group.MapPost("/login", async (LoginUserDto dto, IAuthService authService) =>
         {
             var token = await authService.LoginAsync(dto);
             return Results.Ok(new { token });
-        }).AddEndpointFilter<ValidationFilter<LoginUserDto>>();
+        });
     }
 }

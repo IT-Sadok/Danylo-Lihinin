@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebApiBooking.Domain;
 
 namespace WebApiBooking.Infrastructure.Persistence;
 
-public class BookingDbContext : DbContext
+public class BookingDbContext : IdentityDbContext<User, IdentityRole<int>,int>
 {
     public DbSet<User> Users =>  Set<User>();
     public BookingDbContext(DbContextOptions<BookingDbContext> options) : base(options)
@@ -11,9 +13,6 @@ public class BookingDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-            .Property(u => u.Role)
-            .HasConversion<string>()
-            .HasMaxLength(20);
+        base.OnModelCreating(modelBuilder);
     }
 }

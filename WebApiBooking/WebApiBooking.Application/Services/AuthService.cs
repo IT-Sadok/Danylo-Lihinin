@@ -1,40 +1,50 @@
 using Mapster;
+using Microsoft.AspNetCore.Identity;
 using WebApiBooking.Application.DTOs;
 using WebApiBooking.Application.Interface;
 using WebApiBooking.Domain;
-using WebApiBooking.Domain.Interfaces;
 
 namespace WebApiBooking.Application.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IPasswordHasher _passwordHasher;
+    private readonly UserManager<User> _userManager;
     private readonly IJwtService _jwtService;
-    
-    public async Task<string> LoginAsync(LoginUserDto userDto)
+
+    public AuthService(UserManager<User> userManager, IJwtService jwtService)
     {
-        var user = await _userRepository.GetByEmailAsync(userDto.Email);
-        if(user is null || !_passwordHasher.Verify(userDto.Password,user.HashPassword))
-            throw new UnauthorizedAccessException("Email or password is incorrect");
-        return _jwtService.GenerateJwtToken(user);
-    }
-    public async Task<string> RegisterAsync(RegisterUserDto userDto)
-    {
-        var existingUser = await _userRepository.GetByEmailAsync(userDto.Email);
-        if(existingUser is not null)
-            throw new  UnauthorizedAccessException("Email already exists");
-        var user = userDto.Adapt<User>();
-        user.HashPassword = _passwordHasher.HashPassword(userDto.Password);
-        await _userRepository.AddAsync(user);
-        await _userRepository.SaveChangesAsync();
-        return _jwtService.GenerateJwtToken(user);
+        _userManager = userManager;
+        _jwtService = jwtService;
     }
 
-    public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtService jwtService)
+    public async Task<string> LoginAsync(LoginUserDto userDto)
     {
-        _userRepository =  userRepository;
-        _passwordHasher = passwordHasher;
-        _jwtService = jwtService;
+        var user = await _userManager.FindByEmailAsync(userDto.Email);
+        if (user is null || await _userManager.CheckPasswordAsync(user, userDto.Password))
+            throw new UnauthorizedAccessException("Invalid login attempt");
+        
+        var roles = await _userManager.GetRolesAsync(user);
+        return _jwtService.GenerateJwtToken(user, roles);
+    }
+
+    public async Task<string> RegisterAsync(RegisterUserDto userDto)
+    {
+        var existingUser = await _userManager.FindByEmailAsync(userDto.Email);
+
+        if (existingUser is not null)
+            throw new UnauthorizedAccessException("Email already exists");
+
+        var user = userDto.Adapt<User>();
+        
+        var result = await _userManager.CreateAsync(user, userDto.Password);
+        if (!result.Succeeded)
+        {
+            var errors = string.Join(";",result.Errors.Select(x => x.Description));
+            throw new UnauthorizedAccessException(errors);
+        }
+        
+        await _userManager.AddToRoleAsync(user,userDto.Role);
+        var roles = await _userManager.GetRolesAsync(user);
+        return _jwtService.GenerateJwtToken(user, roles);
     }
 }

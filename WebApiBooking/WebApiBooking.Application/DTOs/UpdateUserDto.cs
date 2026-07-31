@@ -1,6 +1,6 @@
 namespace WebApiBooking.Application.DTOs;
 
-public class UpdateUserDto
+public record UpdateUserDto
 {
     public string Name { get; set; }
     public string Email { get; set; }

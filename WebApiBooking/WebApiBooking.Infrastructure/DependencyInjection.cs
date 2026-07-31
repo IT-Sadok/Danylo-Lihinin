@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebApiBooking.Application.Interface;
-using WebApiBooking.Domain.Interfaces;
+using WebApiBooking.Application.Settings;
+using WebApiBooking.Domain;
 using WebApiBooking.Infrastructure.Persistence;
-using WebApiBooking.Infrastructure.Repositories;
 
 namespace WebApiBooking.Infrastructure;
 
@@ -16,9 +17,17 @@ public static class DependencyInjection
         {
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
-        services.AddScoped<IUserRepository,UserRepository>();
-        services.AddScoped<IPasswordHasher,BCryptPasswordHasher>();
+        
+        services.AddIdentity<User,IdentityRole<int>>(options =>
+        {
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.User.RequireUniqueEmail = true;
+        }).AddEntityFrameworkStores<BookingDbContext>().AddDefaultTokenProviders();
+        
         services.AddScoped<IJwtService, JwtService>();
+        
         return services;
     }
 }

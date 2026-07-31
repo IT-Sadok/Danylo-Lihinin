@@ -1,10 +1,8 @@
-using WebApiBooking.Domain.Enums;
-
 namespace WebApiBooking.Application.DTOs;
 
-public class AuthResponseDto
+public record AuthResponseDto
 {
     public string Token { get; set; }
     public string Email { get; set; }
-    public UserRole Role { get; set; }
+    public string Role { get; set; }
 }
