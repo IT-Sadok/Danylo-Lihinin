@@ -18,7 +18,7 @@ public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
             .NotEmpty()
             .MinimumLength(6);
         RuleFor(u => u.Role)
-            .IsInEnum()
+            .NotEmpty()
             .Must(role => role != Roles.Admin);
     }
 }

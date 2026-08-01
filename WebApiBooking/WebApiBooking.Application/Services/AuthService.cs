@@ -20,7 +20,7 @@ public class AuthService : IAuthService
     public async Task<string> LoginAsync(LoginUserDto userDto)
     {
         var user = await _userManager.FindByEmailAsync(userDto.Email);
-        if (user is null || await _userManager.CheckPasswordAsync(user, userDto.Password))
+        if (user is null || !await _userManager.CheckPasswordAsync(user, userDto.Password))
             throw new UnauthorizedAccessException("Invalid login attempt");
         
         var roles = await _userManager.GetRolesAsync(user);
@@ -35,6 +35,7 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Email already exists");
 
         var user = userDto.Adapt<User>();
+        user.UserName = userDto.Email;
         
         var result = await _userManager.CreateAsync(user, userDto.Password);
         if (!result.Succeeded)
