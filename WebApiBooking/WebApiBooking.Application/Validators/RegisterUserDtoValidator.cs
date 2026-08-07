@@ -19,6 +19,6 @@ public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
             .MinimumLength(6);
         RuleFor(u => u.Role)
             .NotEmpty()
-            .Must(role => role != Roles.Admin);
+            .Must(role => role == Roles.Client || role == Roles.Host);
     }
 }
