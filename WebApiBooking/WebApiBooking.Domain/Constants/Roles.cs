@@ -5,4 +5,6 @@ public static class Roles
     public const string Client = "Client";
     public const string Host = "Host";
     public const string Admin = "Admin";
+
+    public static readonly string[] ApplicationRoles = { Client, Host, Admin };
 }
