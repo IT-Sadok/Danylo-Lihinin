@@ -12,6 +12,8 @@ public static class DependencyInjection
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>();
+        services.AddScoped<IApartmentService, ApartmentService>();
+        services.AddScoped<IBookingService, BookingService>();
         
         return services;
     }

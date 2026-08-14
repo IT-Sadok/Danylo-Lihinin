@@ -14,5 +14,9 @@ public class ApartmentFilterDtoValidator : AbstractValidator<ApartmentFilterDto>
         RuleFor(x => x.EndDate)
             .GreaterThan(x => x.StartDate)
             .When(x => x.StartDate.HasValue && x.EndDate.HasValue);
+        
+        RuleFor(x => x.StartDate)
+            .GreaterThanOrEqualTo(DateTime.UtcNow.Date)
+            .When(x => x.StartDate.HasValue);
     }
 }

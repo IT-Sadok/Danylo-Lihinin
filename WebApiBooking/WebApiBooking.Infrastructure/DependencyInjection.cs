@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebApiBooking.Application.Interface;
+using WebApiBooking.Application.Interfaces;
 using WebApiBooking.Application.Settings;
 using WebApiBooking.Domain;
 using WebApiBooking.Infrastructure.Persistence;
+using WebApiBooking.Infrastructure.Repositories;
 
 namespace WebApiBooking.Infrastructure;
 
@@ -27,6 +29,8 @@ public static class DependencyInjection
         }).AddEntityFrameworkStores<BookingDbContext>().AddDefaultTokenProviders();
         
         services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IApartmentRepository, ApartmentRepository>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
         
         return services;
     }
