@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: webapibooking-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: WebApiBooking
+    ports:
+      - "5432:5432"
+    volumes:
+      - webapibooking_pgdata:/var/lib/postgresql/data
+
+volumes:
+  webapibooking_pgdata:

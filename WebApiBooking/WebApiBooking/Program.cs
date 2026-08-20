@@ -42,7 +42,9 @@ app.UseExceptionHandler();
 using (var scope = app.Services.CreateScope())
 {
     await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
+    await ApartmentSeeder.SeedApartmentAsync(scope.ServiceProvider);
 }
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -55,4 +57,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthEndpoint();
+app.MapBookingEndpoints();
+app.MapApartmentEndpoint();
+
 app.Run();
