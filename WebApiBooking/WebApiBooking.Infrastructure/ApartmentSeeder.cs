@@ -23,9 +23,10 @@ public static class ApartmentSeeder
             user = new User
             {
                 Name = "Test",
-                Email = "testhost@gmail.com"
+                Email = "testhost@gmail.com",
+                UserName = "testhost@gmail.com"
             };
-            await userManager.CreateAsync(user, "12345678");
+            await userManager.CreateAsync(user, "a12345678");
             await userManager.AddToRoleAsync(user, Roles.Host);
         }
 

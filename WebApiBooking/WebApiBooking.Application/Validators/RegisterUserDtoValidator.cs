@@ -16,7 +16,8 @@ public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
             .EmailAddress();
         RuleFor(u => u.Password)
             .NotEmpty()
-            .MinimumLength(6);
+            .MinimumLength(6)
+            .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter.");
         RuleFor(u => u.Role)
             .NotEmpty()
             .Must(role => role == Roles.Client || role == Roles.Host);
