@@ -43,11 +43,6 @@ builder.Services.AddAuthorization();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("Incoming Authorization header: " + context.Request.Headers["Authorization"]);
-    await next();
-});
 
 app.UseExceptionHandler();
 
