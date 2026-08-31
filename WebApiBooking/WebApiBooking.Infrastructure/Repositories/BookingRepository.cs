@@ -29,4 +29,10 @@ public class BookingRepository : IBookingRepository
     {
         return await  _dbContext.Bookings.Where(b => b.UserId == userId).Include(b => b.Apartment).ToListAsync();
     }
+
+    public async Task<bool> IsApartmentAvailableAsync(int apartmentId, DateTime startDate, DateTime endDate)
+    {
+        var hasOverLap = await _dbContext.Bookings.AnyAsync(b => b.ApartmentId == apartmentId && startDate < b.EndDate && endDate > b.StartDate);
+        return !hasOverLap;
+    }
 }

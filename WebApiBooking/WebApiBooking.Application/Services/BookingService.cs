@@ -35,7 +35,6 @@ public class BookingService : IBookingService
 
     public async Task<bool> IsApartmentAvailableAsync(int apartmentId, DateTime startDate, DateTime endDate)
     {
-        var bookings = await _bookingRepository.GetBookingByApartmentIdAsync(apartmentId);
-        return BookingAvailabilityChecker.IsAvailable(bookings, startDate, endDate);
+        return await _bookingRepository.IsApartmentAvailableAsync(apartmentId, startDate, endDate);
     }
 }

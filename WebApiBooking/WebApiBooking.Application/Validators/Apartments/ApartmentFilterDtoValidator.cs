@@ -18,5 +18,10 @@ public class ApartmentFilterDtoValidator : AbstractValidator<ApartmentFilterDto>
         RuleFor(x => x.StartDate)
             .GreaterThanOrEqualTo(DateTime.UtcNow.Date)
             .When(x => x.StartDate.HasValue);
+        RuleFor(x => x.PageSize)
+            .GreaterThan(0)
+            .LessThanOrEqualTo(100);
+        RuleFor(x => x.PageNumber)
+            .GreaterThan(0);
     }
 }
