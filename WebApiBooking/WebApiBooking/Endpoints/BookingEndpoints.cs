@@ -19,10 +19,10 @@ public static class BookingEndpoints
             var id = httpContext.User.FindFirst(JwtRegisteredClaimNames.Sub);
 
             if (id is null)
-                return Results.Unauthorized();
+                return Results.NotFound();
 
             if (!int.TryParse(id.Value, out var userId))
-                return Results.Unauthorized();
+                return Results.NotFound();
 
             await bookingService.CreateBookingAsync(dto, userId);
             return Results.Created();
