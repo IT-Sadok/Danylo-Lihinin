@@ -13,7 +13,7 @@ public class RegisterUserDtoValidatorsTest
     {
         Name = "Danylo",
         Email = "danylo@gmail.com",
-        Password = "123456",
+        Password = "123456a",
         Role = Roles.Client
     };
 

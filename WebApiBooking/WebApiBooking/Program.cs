@@ -18,9 +18,15 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
 
 var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
+        options.MapInboundClaims = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -32,6 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
         };
     });
+
 builder.Services.AddAuthorization();
 builder.Services.AddOpenApi();
 
@@ -42,7 +49,9 @@ app.UseExceptionHandler();
 using (var scope = app.Services.CreateScope())
 {
     await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
+    await ApartmentSeeder.SeedApartmentAsync(scope.ServiceProvider);
 }
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -55,4 +64,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthEndpoint();
+app.MapBookingEndpoints();
+app.MapApartmentEndpoint();
+
 app.Run();

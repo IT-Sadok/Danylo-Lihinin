@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebApiBooking.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using WebApiBooking.Infrastructure.Persistence;
 namespace WebApiBooking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260816210534_AddApartmentsAndBookings")]
+    partial class AddApartmentsAndBookings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

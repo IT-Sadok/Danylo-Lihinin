@@ -20,6 +20,7 @@ public class ExceptionHandler : IExceptionHandler
         {
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, exception.Message),
             KeyNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
+            InvalidOperationException => (StatusCodes.Status500InternalServerError, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred")
         };
 
