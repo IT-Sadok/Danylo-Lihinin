@@ -17,6 +17,12 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<int>,int>
     {
         base.OnModelCreating(modelBuilder);
         
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.ExternalId)
+            .IsUnique();
+        modelBuilder.Entity<Apartment>()
+            .HasIndex(a => a.ExternalId)
+            .IsUnique();
         modelBuilder.Entity<Apartment>()
             .HasOne(a => a.Host)
             .WithMany(u => u.OwnedApartments)
