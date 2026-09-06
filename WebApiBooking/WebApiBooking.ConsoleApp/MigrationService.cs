@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +41,7 @@ public class MigrationService
         try
         {
             await using var fileStream = new FileStream(filePath, FileMode.Open);
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow};
 
             await foreach (var hostDto in JsonSerializer.DeserializeAsyncEnumerable<HostExportDto>(fileStream, options,
                                cancellationToken))
@@ -79,10 +80,13 @@ public class MigrationService
                 {
                     await _dbContext.SaveChangesAsync(cancellationToken);
                     _dbContext.ChangeTracker.Clear();
+                    _logger.LogInformation("Processed {HostCount} hosts", hostProcessed);
                 }
             }
             await _dbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
+            if(hostProcessed == 0)
+                _logger.LogWarning("No hosts were found in the file — check if the file is empty or has an unexpected format");
         }
         catch (Exception ex)
         {
