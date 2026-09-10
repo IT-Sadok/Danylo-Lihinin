@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiBooking.Application.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiBooking.Infrastructure.Tests", "WebApiBooking.Infrastructure.Tests\WebApiBooking.Infrastructure.Tests.csproj", "{491BD532-9111-4976-9C65-8966B6336313}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiBooking.ConsoleApp", "WebApiBooking.ConsoleApp\WebApiBooking.ConsoleApp.csproj", "{F1893EE3-05DC-4DF3-B712-B6E7EC1D7537}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{491BD532-9111-4976-9C65-8966B6336313}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{491BD532-9111-4976-9C65-8966B6336313}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{491BD532-9111-4976-9C65-8966B6336313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1893EE3-05DC-4DF3-B712-B6E7EC1D7537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1893EE3-05DC-4DF3-B712-B6E7EC1D7537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1893EE3-05DC-4DF3-B712-B6E7EC1D7537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1893EE3-05DC-4DF3-B712-B6E7EC1D7537}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
