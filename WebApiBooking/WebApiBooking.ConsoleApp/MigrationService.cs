@@ -17,7 +17,7 @@ public class MigrationService
 {
     private const string DefaultPassword = "1234567a";
     private const string CompanyPrefix = "TestCompany";
-    private const int BatchSize = 200;
+    private const int BatchSize = 50;
 
     private readonly BookingDbContext _dbContext;
     private readonly UserManager<User> _userManager;
@@ -88,7 +88,7 @@ public class MigrationService
             if(hostProcessed == 0)
                 _logger.LogWarning("No hosts were found in the file — check if the file is empty or has an unexpected format");
         }
-        catch (Exception ex)
+        catch
         {
             await transaction.RollbackAsync(cancellationToken);
             throw;
