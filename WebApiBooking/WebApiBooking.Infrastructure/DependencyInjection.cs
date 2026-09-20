@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<IDbConnectionFactory, NpgsqlConnectionFactory>();
         services.AddScoped<ISqlScriptProvider, EmbeddedSqlScriptProvider>();
+        services.AddScoped<IStatisticsRepository, StatisticsRepository>();
         
         return services;
     }
