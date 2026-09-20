@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using WebApiBooking.Application.DTOs;
 using WebApiBooking.Application.Interface;
 using WebApiBooking.Domain;
+using WebApiBooking.Domain.Constants;
 using WebApiBooking.Filters;
 
 namespace WebApiBooking.Endpoints;
@@ -40,6 +41,6 @@ public static class BookingEndpoints
             
             var bookings = await bookingService.GetBookingsAsync(userId);
             return Results.Ok(bookings);
-        }).RequireAuthorization();
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Host));
     }
 }

@@ -7,6 +7,7 @@ public class Apartment
     public string Name { get; set; }
     public decimal Price { get; set; }
     public short Rooms { get; set; }
+    public string? CustomData { get; set; }
 
     public int HostId { get; set; }
     public User Host { get; set; }

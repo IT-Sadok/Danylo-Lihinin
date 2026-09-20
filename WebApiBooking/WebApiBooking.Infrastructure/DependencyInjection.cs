@@ -31,6 +31,9 @@ public static class DependencyInjection
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IApartmentRepository, ApartmentRepository>();
         services.AddScoped<IBookingRepository, BookingRepository>();
+        services.AddScoped<IDbConnectionFactory, NpgsqlConnectionFactory>();
+        services.AddScoped<ISqlScriptProvider, EmbeddedSqlScriptProvider>();
+        services.AddScoped<IStatisticsRepository, StatisticsRepository>();
         
         return services;
     }

@@ -28,6 +28,9 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<int>,int>
             .WithMany(u => u.OwnedApartments)
             .HasForeignKey(a => a.HostId)
             .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<Apartment>()
+            .Property(a => a.CustomData)
+            .HasColumnType("jsonb");
         modelBuilder.Entity<Booking>()
             .HasOne(b => b.User)
             .WithMany(u => u.Bookings)

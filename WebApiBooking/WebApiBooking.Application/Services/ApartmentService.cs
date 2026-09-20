@@ -23,10 +23,11 @@ public class ApartmentService : IApartmentService
         PagedResult<ApartmentWithHost> apartments;
         var pageSize = filter.PageSize ?? 10;
         var pageNumber = filter.PageNumber ?? 1;
-        
+
         if (filter.EndDate is not null && filter.StartDate is not null)
         {
-            apartments = await _apartmentRepository.GetAvailableApartmentsAsync(filter.StartDate.Value, filter.EndDate.Value, pageSize, pageNumber);
+            apartments = await _apartmentRepository.GetAvailableApartmentsAsync(filter.StartDate.Value,
+                filter.EndDate.Value, pageSize, pageNumber);
         }
         else
         {
@@ -37,6 +38,20 @@ public class ApartmentService : IApartmentService
         response.TotalCount = apartments.TotalCount;
         response.Items = apartments.Items.Adapt<List<ApartmentResponseDto>>();
         return response;
+    }
+
+    public async Task<int> UpsertApartmentAsync(UpsertApartmentDto upsertApartmentDto, int currentHostId)
+    {
+        if (upsertApartmentDto.Id.HasValue)
+        {
+            var dtoId = upsertApartmentDto.Id.Value;
+            var apartmen = await _apartmentRepository.GetApartmentByIdAsync(dtoId);
+            if (apartmen is null)
+                throw new KeyNotFoundException("Apartment not found");
+            if(apartmen.HostId != currentHostId)
+                throw new UnauthorizedAccessException("You are not authorized to update the apartment");
+        }
+        return await _apartmentRepository.UpsertApartmentAsync(upsertApartmentDto, currentHostId);
     }
 
     public async Task EnsureApartmentExistAsync(int id)

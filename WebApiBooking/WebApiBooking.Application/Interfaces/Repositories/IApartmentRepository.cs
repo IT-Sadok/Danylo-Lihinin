@@ -1,3 +1,4 @@
+using WebApiBooking.Application.DTOs;
 using WebApiBooking.Application.Models;
 using WebApiBooking.Domain;
 
@@ -8,4 +9,5 @@ public interface IApartmentRepository
     public Task<PagedResult<ApartmentWithHost>> GetApartmentsAsync(int pageSize, int pageNumber);
     public Task<Apartment?> GetApartmentByIdAsync(int id);
     public Task<PagedResult<ApartmentWithHost>> GetAvailableApartmentsAsync(DateTime startDate, DateTime endDate,int pageSize, int pageNumber);
+    public Task<int> UpsertApartmentAsync(UpsertApartmentDto dto, int currentHostId);
 }
