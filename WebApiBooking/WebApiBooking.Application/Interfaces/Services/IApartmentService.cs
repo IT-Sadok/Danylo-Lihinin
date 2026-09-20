@@ -8,4 +8,5 @@ public interface IApartmentService
 {
     public Task<PagedResult<ApartmentResponseDto>> GetApartmentsAsync(ApartmentFilterDto filter);
     public Task EnsureApartmentExistAsync(int id);
+    public Task<int> UpsertApartmentAsync(UpsertApartmentDto upsertApartmentDto, int currentHostId);
 }

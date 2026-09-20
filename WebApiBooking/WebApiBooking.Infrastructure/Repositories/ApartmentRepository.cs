@@ -1,4 +1,6 @@
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using WebApiBooking.Application.DTOs;
 using WebApiBooking.Application.Interfaces;
 using WebApiBooking.Application.Models;
 using WebApiBooking.Domain;
@@ -9,10 +11,14 @@ namespace WebApiBooking.Infrastructure.Repositories;
 public class ApartmentRepository : IApartmentRepository
 {
     private BookingDbContext _dbContext;
+    private ISqlScriptProvider _sqlScriptProvider;
+    private IDbConnectionFactory _dbConnectionFactory;
 
-    public ApartmentRepository(BookingDbContext dbContext)
+    public ApartmentRepository(BookingDbContext dbContext, ISqlScriptProvider sqlScriptProvider, IDbConnectionFactory dbConnectionFactory)
     {
         _dbContext = dbContext;
+        _sqlScriptProvider = sqlScriptProvider;
+        _dbConnectionFactory = dbConnectionFactory;
     }
 
     public async Task<PagedResult<ApartmentWithHost>> GetApartmentsAsync(int pageSize, int pageNumber)
@@ -61,5 +67,21 @@ public class ApartmentRepository : IApartmentRepository
             })
             .ToListAsync();
         return pagedResult;
+    }
+
+    public async Task<int> UpsertApartmentAsync(UpsertApartmentDto dto, int currentHostId)
+    {
+        var sql = await _sqlScriptProvider.GetScriptAsync("UpsertApartment");
+        using var connection = _dbConnectionFactory.CreateConnection();
+        
+        return await connection.ExecuteScalarAsync<int>(sql, new
+        {
+            dto.Id,
+            dto.Name,
+            dto.Price,
+            dto.Rooms,
+            dto.CustomData,
+            HostId = currentHostId
+        });
     }
 }
