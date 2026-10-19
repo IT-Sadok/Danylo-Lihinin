@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions: 
       contents: read
-      cheks: write
+      checks: write
     steps:
       - uses: actions/checkout@v4
 
@@ -33,7 +33,7 @@ jobs:
           --results-directory ./TestResults
 
       - name: Test report
-        uses: dorny/testreporter@v1
+        uses: dorny/test-reporter@v1
         if: ${{  !cancelled()  }}
         with:
           name: Test results
