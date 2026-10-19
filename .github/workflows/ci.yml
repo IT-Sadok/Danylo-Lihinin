@@ -20,7 +20,7 @@ jobs:
         run: dotnet restore WebApiBooking/WebApiBooking.sln
 
       - name: Build
-        run: dotnet build WebApiBooking/WebApiBoking.sln -c release --no-restore
+        run: dotnet build WebApiBooking/WebApiBooking.sln -c release --no-restore
 
       - name: Test
         run: dotnet test WebApiBooking/WebApiBooking.sln -c release --no-build
