@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: net 10.0
+
+      - name: Restore
+        run: dotnet restore WebApiBooking/WebApiBooking.sln
+
+      - name: Build
+        run: dotnet build WebApiBooking/WebApiBoking.sln -c release --no-restore
+
+      - name: Test
+        run: dotnet test WebApiBooking/WebApiBooking.sln -c release --no-build
