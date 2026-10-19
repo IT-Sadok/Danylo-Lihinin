@@ -3,12 +3,15 @@ name: CI
 on:
   push:
   pull_request:
-  workflow_dispatch: 
-    
+  workflow_dispatch:
+
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions: 
+      contents: read
+      cheks: write
     steps:
       - uses: actions/checkout@v4
 
@@ -23,4 +26,16 @@ jobs:
         run: dotnet build WebApiBooking/WebApiBooking.sln -c release --no-restore
 
       - name: Test
-        run: dotnet test WebApiBooking/WebApiBooking.sln -c release --no-build
+        run: >
+          dotnet test WebApiBooking/WebApiBooking.sln
+          -c Release --no-build
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory ./TestResults
+
+      - name: Test report
+        uses: dorny/testreporter@v1
+        if: ${{  !cancelled()  }}
+        with:
+          name: Test results
+          path: TestResults/*.trx
+          reporter: dotnet-trx
