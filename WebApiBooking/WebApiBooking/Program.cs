@@ -75,5 +75,6 @@ app.MapAuthEndpoint();
 app.MapBookingEndpoints();
 app.MapApartmentEndpoint();
 app.MapStatisticsEndpoints();
+app.MapUserEndpoints();
 
 app.Run();

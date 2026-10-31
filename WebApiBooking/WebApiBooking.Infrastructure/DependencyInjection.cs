@@ -34,6 +34,7 @@ public static class DependencyInjection
         services.AddScoped<IDbConnectionFactory, NpgsqlConnectionFactory>();
         services.AddScoped<ISqlScriptProvider, EmbeddedSqlScriptProvider>();
         services.AddScoped<IStatisticsRepository, StatisticsRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         
         return services;
     }

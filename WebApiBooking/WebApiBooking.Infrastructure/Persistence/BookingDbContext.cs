@@ -10,6 +10,7 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<int>,int>
     public DbSet<User> Users =>  Set<User>();
     public DbSet<Apartment> Apartments =>  Set<Apartment>();
     public DbSet<Booking> Bookings =>  Set<Booking>();
+    public DbSet<OutboxMessage> OutboxMessages =>  Set<OutboxMessage>();
     public BookingDbContext(DbContextOptions<BookingDbContext> options) : base(options)
     {}
 
@@ -41,5 +42,10 @@ public class BookingDbContext : IdentityDbContext<User, IdentityRole<int>,int>
             .WithMany(u => u.Bookings)
             .HasForeignKey(b => b.ApartmentId)
             .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<OutboxMessage>()
+            .Property(a => a.Payload)
+            .HasColumnType("jsonb");
+        modelBuilder.Entity<OutboxMessage>()
+            .HasIndex(a => a.ProcessedAt);
     }
 }
