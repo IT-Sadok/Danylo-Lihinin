@@ -10,6 +10,12 @@ services:
       - "5432:5432"
     volumes:
       - webapibooking_pgdata:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: webapibooking-rabbitmq
+    ports:
+      - "5672:5672"    
+      - "15672:15672"  
 
 volumes:
   webapibooking_pgdata:

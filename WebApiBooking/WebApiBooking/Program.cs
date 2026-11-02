@@ -12,6 +12,7 @@ using WebApiBooking.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddOutboxPublisher(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddExceptionHandler<ExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -46,6 +47,7 @@ builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationSc
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SecretKey))
         };
     });
+
 
 builder.Services.AddAuthorization();
 builder.Services.AddOpenApi();
