@@ -1,3 +1,5 @@
+name: webapibooking
+
 services:
   postgres:
     image: postgres:16
@@ -16,6 +18,15 @@ services:
     ports:
       - "5672:5672"    
       - "15672:15672"  
+  mongo:
+    image: mongo:8
+    container_name: auditservice-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - auditservice_mongodata:/data/db 
 
 volumes:
   webapibooking_pgdata:
+  auditservice_mongodata:
+    
