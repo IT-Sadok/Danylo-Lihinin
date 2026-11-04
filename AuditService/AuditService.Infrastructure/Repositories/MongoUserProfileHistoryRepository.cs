@@ -13,7 +13,7 @@ public class MongoUserProfileHistoryRepository : IUserProfileHistoryRepository
 
     public MongoUserProfileHistoryRepository(IMongoDatabase database)
     {
-        _collection = database.GetCollection<UserProfileHistory>("UserProfileHistory");
+        _collection = database.GetCollection<UserProfileHistory>(MongoCollections.UserProfileHistory);
     }
 
     public async Task<bool> TryAddUserProfileAsync(UserProfileUpdated updateEvent, CancellationToken ct)
