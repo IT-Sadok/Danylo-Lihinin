@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AuditService.Infrastructure.Persistence.Settings;
+namespace AuditService.Infrastructure.Settings;
 
 public class MongoSettings
 {

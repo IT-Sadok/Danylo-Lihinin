@@ -1,7 +1,8 @@
 using AuditService.Application.Interfaces.Repositories;
+using AuditService.Infrastructure.Messaging;
 using AuditService.Infrastructure.Persistence;
-using AuditService.Infrastructure.Persistence.Settings;
 using AuditService.Infrastructure.Repositories;
+using AuditService.Infrastructure.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -17,8 +18,13 @@ public static class DependencyInjection
             .Bind(configuration.GetSection("Mongo"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
+        services.AddOptions<RabbitMqSettings>()
+            .Bind(configuration.GetSection("RabbitMq"))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         
         services.AddHostedService<MongoIndexInitializer>();
+        services.AddHostedService<ProfileEventsConsumer>();
         services.AddSingleton<IMongoClient>(sp =>
             new MongoClient(sp.GetRequiredService<IOptions<MongoSettings>>().Value.ConnectionString));
         services.AddSingleton(sp =>
@@ -26,7 +32,6 @@ public static class DependencyInjection
                 .GetDatabase(sp.GetRequiredService<IOptions<MongoSettings>>().Value.DatabaseName));
         services.AddSingleton<IUserProfileHistoryRepository, MongoUserProfileHistoryRepository>();
         
-        services.AddHostedService<MongoIndexInitializer>();
         
         return services;
     }
