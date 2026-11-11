@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using WebApiBooking.Application.DTOs;
 using WebApiBooking.Application.Interface;
+using WebApiBooking.Domain.Constants;
 using WebApiBooking.Filters;
 
 namespace WebApiBooking.Endpoints;
@@ -26,6 +27,6 @@ public static class ApartmentEndpoints
             
             var  apartmentId = await service.UpsertApartmentAsync(dto, hostId);
             return Results.Ok(apartmentId);
-        }).RequireAuthorization().AddEndpointFilter<ValidationFilter<UpsertApartmentDto>>();
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Host)).AddEndpointFilter<ValidationFilter<UpsertApartmentDto>>();
     }
 }

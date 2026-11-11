@@ -56,10 +56,13 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
-    await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
-    await ApartmentSeeder.SeedApartmentAsync(scope.ServiceProvider);
+    using (var scope = app.Services.CreateScope())
+    {
+        await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
+        await ApartmentSeeder.SeedApartmentAsync(scope.ServiceProvider);
+    }
 }
 
 

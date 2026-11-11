@@ -35,7 +35,7 @@ public class OutboxPublisherWorker : BackgroundService
                 _logger.LogError(ex,"Outbox publishing failed, will retry");
             }
 
-            Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
         }
     }
 
