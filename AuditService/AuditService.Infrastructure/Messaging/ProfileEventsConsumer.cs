@@ -47,13 +47,12 @@ public class ProfileEventsConsumer : BackgroundService
         
     }
 
-    private async Task HandleAsync(IChannel channel, BasicDeliverEventArgs ea, CancellationToken stoppingToken)
+    internal async Task HandleAsync(IChannel channel, BasicDeliverEventArgs ea, CancellationToken stoppingToken)
     {
         try
         {
             var userEvent = JsonSerializer.Deserialize<UserProfileUpdated>(ea.Body.Span);
-            if (userEvent is null || userEvent.EventId == Guid.Empty || userEvent.UserId <= 0
-                || userEvent.Version <= 0 || userEvent.Snapshot is null)
+            if (ValidateEvent(userEvent))
             {
                 _logger.LogWarning("Invalid event {MessageId}, rejecting", ea.BasicProperties.MessageId);
                 await channel.BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: false, stoppingToken);
@@ -82,7 +81,18 @@ public class ProfileEventsConsumer : BackgroundService
 
         }
     }
-    
+
+    private bool ValidateEvent(UserProfileUpdated userEvent)
+    {
+        if (userEvent is null || userEvent.EventId == Guid.Empty || userEvent.UserId <= 0
+            || userEvent.Version <= 0 || userEvent.Snapshot is null
+            || string.IsNullOrWhiteSpace(userEvent.Snapshot.Name)
+            || string.IsNullOrWhiteSpace(userEvent.Snapshot.Email))
+        {
+            return true;
+        }
+        return false;
+    }
 }
     
     
