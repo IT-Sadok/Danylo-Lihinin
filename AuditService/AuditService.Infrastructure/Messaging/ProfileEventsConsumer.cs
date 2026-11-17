@@ -52,7 +52,7 @@ public class ProfileEventsConsumer : BackgroundService
         try
         {
             var userEvent = JsonSerializer.Deserialize<UserProfileUpdated>(ea.Body.Span);
-            if (ValidateEvent(userEvent))
+            if (IsInvalidEvent(userEvent))
             {
                 _logger.LogWarning("Invalid event {MessageId}, rejecting", ea.BasicProperties.MessageId);
                 await channel.BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: false, stoppingToken);
