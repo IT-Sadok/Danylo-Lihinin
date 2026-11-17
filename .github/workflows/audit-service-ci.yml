@@ -58,5 +58,5 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: AuditService test results
-          path: TestResults/*.trx
+          path: AuditService/TestResults/*.trx
           reporter: dotnet-trx
