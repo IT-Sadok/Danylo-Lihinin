@@ -106,6 +106,7 @@ public class ProfileEventsConsumerTests
         Valid() with { EventId = Guid.Empty },
         Valid() with { UserId = 0 },
         Valid() with { Version = 0 },
+        Valid() with { OccurredAt = default },          
         Valid() with { Snapshot = null! },
         Valid() with { Snapshot = new ProfileSnapshot { Name = "", Email = "a@b.com" } },
         Valid() with { Snapshot = new ProfileSnapshot { Name = "Danylo", Email = " " } }
