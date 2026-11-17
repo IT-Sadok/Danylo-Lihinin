@@ -82,7 +82,7 @@ public class ProfileEventsConsumer : BackgroundService
         }
     }
 
-    private bool ValidateEvent(UserProfileUpdated userEvent)
+    private bool IsInvalidEvent(UserProfileUpdated userEvent)
     {
         if (userEvent is null || userEvent.EventId == Guid.Empty || userEvent.UserId <= 0
             || userEvent.Version <= 0 || userEvent.Snapshot is null
