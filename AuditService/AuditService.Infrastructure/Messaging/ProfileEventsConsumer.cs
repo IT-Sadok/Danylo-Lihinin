@@ -87,7 +87,8 @@ public class ProfileEventsConsumer : BackgroundService
         if (userEvent is null || userEvent.EventId == Guid.Empty || userEvent.UserId <= 0
             || userEvent.Version <= 0 || userEvent.Snapshot is null
             || string.IsNullOrWhiteSpace(userEvent.Snapshot.Name)
-            || string.IsNullOrWhiteSpace(userEvent.Snapshot.Email))
+            || string.IsNullOrWhiteSpace(userEvent.Snapshot.Email
+            || userEvent.OccurredAt == default))
         {
             return true;
         }

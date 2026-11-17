@@ -40,7 +40,7 @@ public class UserRepository : IUserRepository
                 throw new ConflictException("Duplicate email");
             throw new InvalidOperationException(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
-        var versioned = updateEvent with { Version = user.ProfileVersion };
+        var versioned = updateEvent with { Version = user.ProfileVersion, OccurredAt = DateTimeOffset.UtcNow };
         var jsonEvent =  JsonSerializer.Serialize(versioned);
         var outboxMessage = new OutboxMessage
         {

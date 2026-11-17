@@ -26,7 +26,6 @@ public class UserService : IUserService
             EventId = Guid.NewGuid(),
             SchemaVersion = 1,
             UserId = userId,
-            OccurredAt = DateTimeOffset.UtcNow,
             Snapshot = snapshot
         };
             
