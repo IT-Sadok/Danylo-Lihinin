@@ -1,5 +1,5 @@
 name: AuditService CI
-
+      
 on:
   push:
     paths:
@@ -17,6 +17,10 @@ jobs:
     permissions:
       contents: read
       checks: write
+      
+    defaults:
+        run:
+          working-directory: AuditService
 
     services:
       mongo:
