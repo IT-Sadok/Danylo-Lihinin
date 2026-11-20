@@ -1,0 +1,32 @@
+name: webapibooking
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: webapibooking-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: WebApiBooking
+    ports:
+      - "5432:5432"
+    volumes:
+      - webapibooking_pgdata:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: webapibooking-rabbitmq
+    ports:
+      - "5672:5672"    
+      - "15672:15672"  
+  mongo:
+    image: mongo:8
+    container_name: auditservice-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - auditservice_mongodata:/data/db 
+
+volumes:
+  webapibooking_pgdata:
+  auditservice_mongodata:
+    

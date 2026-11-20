@@ -18,6 +18,6 @@ public class ValidationFilter<T> : IEndpointFilter where T : class
             if (!validationResult.IsValid)
                 return Results.ValidationProblem(validationResult.ToDictionary());
         }
-        return next(context);
+        return await next(context);
     }
 }

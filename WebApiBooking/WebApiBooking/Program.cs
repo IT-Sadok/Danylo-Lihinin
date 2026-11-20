@@ -12,6 +12,7 @@ using WebApiBooking.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddOutboxPublisher(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddExceptionHandler<ExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -47,6 +48,7 @@ builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationSc
         };
     });
 
+
 builder.Services.AddAuthorization();
 builder.Services.AddOpenApi();
 
@@ -54,10 +56,13 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
-    await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
-    await ApartmentSeeder.SeedApartmentAsync(scope.ServiceProvider);
+    using (var scope = app.Services.CreateScope())
+    {
+        await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
+        await ApartmentSeeder.SeedApartmentAsync(scope.ServiceProvider);
+    }
 }
 
 
@@ -75,5 +80,6 @@ app.MapAuthEndpoint();
 app.MapBookingEndpoints();
 app.MapApartmentEndpoint();
 app.MapStatisticsEndpoints();
+app.MapUserEndpoints();
 
 app.Run();

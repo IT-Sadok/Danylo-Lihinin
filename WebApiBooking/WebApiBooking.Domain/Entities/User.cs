@@ -5,6 +5,7 @@ namespace WebApiBooking.Domain;
 public class User : IdentityUser<int>
 {
     public string Name { get; set; }
+    public int ProfileVersion { get; set; }
     public string? ExternalId { get; set; }
     
     public ICollection<Apartment> OwnedApartments { get; set; } = new List<Apartment>();

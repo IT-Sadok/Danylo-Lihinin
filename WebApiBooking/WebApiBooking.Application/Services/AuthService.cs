@@ -44,7 +44,12 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException(errors);
         }
         
-        await _userManager.AddToRoleAsync(user,userDto.Role);
+        var roleResult = await _userManager.AddToRoleAsync(user,userDto.Role);
+        if (!roleResult.Succeeded)
+        {
+            var errors = string.Join(";",result.Errors.Select(x => x.Description));
+            throw new UnauthorizedAccessException(errors);
+        }
         var roles = await _userManager.GetRolesAsync(user);
         return _jwtService.GenerateJwtToken(user, roles);
     }

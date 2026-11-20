@@ -6,6 +6,7 @@ using WebApiBooking.Application.Interface;
 using WebApiBooking.Application.Interfaces;
 using WebApiBooking.Application.Settings;
 using WebApiBooking.Domain;
+using WebApiBooking.Infrastructure.Messaging;
 using WebApiBooking.Infrastructure.Persistence;
 using WebApiBooking.Infrastructure.Repositories;
 
@@ -34,7 +35,18 @@ public static class DependencyInjection
         services.AddScoped<IDbConnectionFactory, NpgsqlConnectionFactory>();
         services.AddScoped<ISqlScriptProvider, EmbeddedSqlScriptProvider>();
         services.AddScoped<IStatisticsRepository, StatisticsRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         
+        return services;
+    }
+
+    public static IServiceCollection AddOutboxPublisher(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOptions<RabbitMqSettings>()
+            .Bind(configuration.GetSection("RabbitMq"))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services.AddHostedService<OutboxPublisherWorker>();
         return services;
     }
 }
