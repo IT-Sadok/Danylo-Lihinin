@@ -17,7 +17,7 @@ public static class UserEndpoints
             var id = httpContext.User.FindFirst(JwtRegisteredClaimNames.Sub);
 
             if (id is null)
-                return Results.NotFound();
+                return Results.Unauthorized();
 
             if (!int.TryParse(id.Value, out var userId))
                 return Results.NotFound();

@@ -13,7 +13,9 @@ builder.Services.AddApplication();
 builder.Services.AddOpenApi();
 
 var jwt = builder.Configuration.GetSection("Jwt");
-
+var secretKey = jwt["SecretKey"];
+ if(string.IsNullOrWhiteSpace(secretKey) || secretKey.Length < 32)
+     throw new InvalidOperationException("Secret key is missing or secret key must be at least 32 symbols long");
 
 builder.Services.AddAuthentication(options =>
     {
@@ -32,7 +34,7 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwt["Issuer"],
             ValidAudience = jwt["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt["SecretKey"]!))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!))
         };
     });
 builder.Services.AddAuthorization();

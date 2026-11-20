@@ -12,7 +12,7 @@ public class UserProfileAuditService : IUserProfileAuditService
     {
         _repository = repository;
     }
-    public async Task<UserProfileSnapshotResult> GetUserProfileSnapshotAsync(int userId, DateTimeOffset date, CancellationToken ct)
+    public async Task<UserProfileSnapshotResult?> GetUserProfileSnapshotAsync(int userId, DateTimeOffset date, CancellationToken ct)
     {
         var snapshot = await _repository.GetUserProfileSnapshotAsync(userId, date, ct);
         return snapshot;
