@@ -69,7 +69,10 @@ if (app.Environment.IsDevelopment())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options.AddServer("http://localhost:5000", "ReverseProxy");
+    });
 }
 
 app.UseHttpsRedirection();
