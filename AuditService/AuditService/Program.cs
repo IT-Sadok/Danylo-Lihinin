@@ -45,8 +45,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options.AddServer("http://localhost:5000", "ReverseProxy");
+    });
 }
+app.Use(async(context, next) =>
+{
+    context.Response.Headers["X-Served-By"] = context.Connection.LocalPort.ToString();
+    await next.Invoke();
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
