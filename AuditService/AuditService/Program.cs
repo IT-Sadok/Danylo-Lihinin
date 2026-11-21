@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddOpenApi();
+builder.Services.AddHealthChecks();
 
 var jwt = builder.Configuration.GetSection("Jwt");
 var secretKey = jwt["SecretKey"];
@@ -60,5 +61,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuditEndpoints();
+app.MapHealthChecks("/health");
+
 
 app.Run();
