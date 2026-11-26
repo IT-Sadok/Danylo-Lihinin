@@ -3,6 +3,7 @@ using AuditService.Infrastructure.Messaging;
 using AuditService.Infrastructure.Persistence;
 using AuditService.Infrastructure.Repositories;
 using AuditService.Infrastructure.Settings;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -22,7 +23,17 @@ public static class DependencyInjection
             .Bind(configuration.GetSection("RabbitMq"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
-        
+        services.AddOptions<RedisSettings>()
+            .Bind(configuration.GetSection("Redis"))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddStackExchangeRedisCache(_ => { });
+        services.AddOptions<RedisCacheOptions>()
+            .Configure<IOptions<RedisSettings>>((cacheOptions, settings) =>
+            {
+                cacheOptions.Configuration = settings.Value.ConnectionString;
+            });
         services.AddHostedService<MongoIndexInitializer>();
         services.AddHostedService<ProfileEventsConsumer>();
         services.AddSingleton<IMongoClient>(sp =>
